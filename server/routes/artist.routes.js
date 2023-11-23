@@ -1,7 +1,13 @@
 const DiscoverRouter = require("../controllers/artist/discover.controller");
+const UploadRouter = require("../controllers/upload.controller");
 const router = require("express").Router();
 
 //posts
+router.post(
+  "/posts/upload-image",
+  UploadRouter.upload.single("image"),
+  UploadRouter.uploadSingleFile
+);
 router.post("/posts", DiscoverRouter.addPost);
 
 //discover routes

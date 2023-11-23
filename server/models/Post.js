@@ -17,7 +17,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 const postSchema = new mongoose.Schema({
-  post_url: { type: String, required: true },
+  image: { type: String, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "category" },
   status: {
     type: String,
