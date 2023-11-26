@@ -46,7 +46,7 @@ router.get(
 );
 
 router.get(
-  "/discover/post/remove-bookmark/:_id",
+  "/discover/post/remove-bookmark/:postId",
   authCustomer,
   DiscoverRouter.removeBookmark
 );

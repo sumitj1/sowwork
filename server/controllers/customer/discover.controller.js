@@ -124,13 +124,29 @@ exports.bookmarkPost = async (req, res) => {
     const { _id } = req.params;
     const user_id = req.user._id;
 
-    let newBookmark = new Bookmark({
+    const bookmark = await Bookmark.findOne({
       post: _id,
       user: user_id,
-      status: STATUS_ACTIVE,
     });
 
-    newBookmark = await newBookmark.save();
+    if (!bookmark) {
+      let newBookmark = new Bookmark({
+        post: _id,
+        user: user_id,
+        status: STATUS_ACTIVE,
+      });
+
+      newBookmark = await newBookmark.save();
+    } else {
+      updatedBookmark = await Bookmark.findByIdAndUpdate(bookmark._id, {
+        $set: {
+          status: STATUS_ACTIVE,
+          is_deleted: false,
+          updated_at: new Date().toISOString(),
+          deleted_at: null,
+        },
+      });
+    }
 
     res.send({ error: false, message: "Post Bookmarked." });
   } catch (error) {
@@ -167,10 +183,10 @@ exports.getBookmarks = async (req, res) => {
  */
 exports.removeBookmark = async (req, res) => {
   try {
-    const { _id } = req.params;
-    let updatedBookmark = await Bookmark.findByIdAndUpdate(
+    const { postId } = req.params;
+    let updatedBookmark = await Bookmark.findOneAndUpdate(
       {
-        _id: _id,
+        post: new ObjectId(postId),
       },
       {
         status: STATUS_DELETED,
