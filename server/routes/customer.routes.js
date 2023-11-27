@@ -25,7 +25,7 @@ router.post(
 );
 
 //discover routes
-router.get("/discover/post/get-all", DiscoverRouter.getAllPosts);
+router.get("/discover/post/get-all", authCustomer, DiscoverRouter.getAllPosts);
 router.post(
   "/discover/post/add-comment",
   authCustomer,

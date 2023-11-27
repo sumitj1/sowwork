@@ -17,12 +17,117 @@ const { ObjectId } = mongoose.Types;
  */
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({
-      status: STATUS_ACTIVE,
-    })
-      .populate("user")
-      .populate("comments.user")
-      .sort("created_at : -1");
+    const userId = req.user._id;
+
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          status: STATUS_ACTIVE,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      { $unwind: "$comments" },
+      {
+        $lookup: {
+          from: "users",
+          localField: "comments.user",
+          foreignField: "_id",
+          as: "comments.user",
+        },
+      },
+      { $unwind: "$comments.user" },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          image: 1,
+          status: 1,
+          user: {
+            first_name: 1,
+            last_name: 1,
+            _id: 1,
+          },
+          is_deleted: 1,
+          created_at: 1,
+          "comments._id": 1,
+          "comments.comment": 1,
+          "comments._is_deleted": 1,
+          "comments.created_at": 1,
+          "comments.user": {
+            first_name: 1,
+            last_name: 1,
+            _id: 1,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          category: { $first: "$category" },
+          image: { $first: "$image" },
+          status: { $first: "$status" },
+          user: { $first: "$user" },
+          is_deleted: { $first: "$is_deleted" },
+          created_at: { $first: "$created_at" },
+          comments: { $push: "$comments" },
+        },
+      },
+      {
+        $lookup: {
+          from: "bookmarks",
+          let: { postId: "$_id" }, // Variable to store the post ID from posts collection
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$post", "$$postId"] }, // Match bookmark's postId with post's _id
+                    { $eq: ["$user", new ObjectId(userId)] }, // Match bookmark's userId with current user's ID
+                    { $eq: ["$status", STATUS_ACTIVE] },
+                    { $eq: ["$is_deleted", false] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "bookmarks", // Store matched bookmarks in an array field called "bookmarks"
+        },
+      },
+      {
+        $addFields: {
+          isBookmarked: {
+            $cond: {
+              if: { $eq: [{ $size: "$bookmarks" }, 0] }, // Check if bookmarks array is empty
+              then: false, // No bookmarks found for this post and user
+              else: true, // Bookmarks found for this post and user
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          image: 1,
+          status: 1,
+          user: 1,
+          is_deleted: 1,
+          created_at: 1,
+          comments: 1,
+          isBookmarked: 1,
+        },
+      },
+    ]);
 
     res.send({ error: false, data: posts });
   } catch (error) {
