@@ -8,6 +8,7 @@ const Post = require("../../models/Post");
 const Report = require("../../models/Report");
 const Bookmark = require("../../models/Bookmark");
 const mongoose = require("mongoose");
+const { formatNumber } = require("../../utils/common.functions");
 const { ObjectId } = mongoose.Types;
 
 /**
@@ -52,6 +53,7 @@ exports.getAllPosts = async (req, res) => {
           category: 1,
           image: 1,
           status: 1,
+          reactions: 1,
           user: {
             first_name: 1,
             last_name: 1,
@@ -76,6 +78,7 @@ exports.getAllPosts = async (req, res) => {
           category: { $first: "$category" },
           image: { $first: "$image" },
           status: { $first: "$status" },
+          reactions: { $first: "$reactions" },
           user: { $first: "$user" },
           is_deleted: { $first: "$is_deleted" },
           created_at: { $first: "$created_at" },
@@ -120,6 +123,7 @@ exports.getAllPosts = async (req, res) => {
           category: 1,
           image: 1,
           status: 1,
+          reactions: 1,
           user: 1,
           is_deleted: 1,
           created_at: 1,
@@ -128,6 +132,35 @@ exports.getAllPosts = async (req, res) => {
         },
       },
     ]);
+
+    for (let post of posts) {
+      // finding userId
+      if (post?.reactions?.love?.includes(userId)) {
+        post.selectedReaction = "love";
+      } else if (post?.reactions?.happy?.includes(userId)) {
+        post.selectedReaction = "happy";
+      } else if (post?.reactions?.surprise?.includes(userId)) {
+        post.selectedReaction = "surprise";
+      } else if (post?.reactions?.laugh?.includes(userId)) {
+        post.selectedReaction = "laugh";
+      } else {
+        post.selectedReaction = null;
+      }
+
+      //setting count by rections length and formatting
+      post.reactions.love = post?.reactions?.love?.length
+        ? formatNumber(post?.reactions?.love?.length)
+        : 0;
+      post.reactions.happy = post?.reactions?.happy?.length
+        ? formatNumber(post?.reactions?.happy?.length)
+        : 0;
+      post.reactions.surprise = post?.reactions?.surprise?.length
+        ? formatNumber(post?.reactions?.surprise?.length)
+        : 0;
+      post.reactions.laugh = post?.reactions?.laugh?.length
+        ? formatNumber(post?.reactions?.laugh?.length)
+        : 0;
+    }
 
     res.send({ error: false, data: posts });
   } catch (error) {

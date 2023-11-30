@@ -26,7 +26,12 @@ const postSchema = new mongoose.Schema({
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   comments: [commentSchema],
-
+  reactions : {
+    love : [String],
+    happy : [String],
+    surprise : [String],
+    laugh : [String]
+  },
   is_deleted: { type: Boolean, default: false },
   created_at: { type: Date, default: new Date() },
   updated_at: { type: Date, default: new Date() },
