@@ -35,9 +35,17 @@ exports.getAllPosts = async (req, res) => {
         },
       },
       {
-        $unwind: "$user",
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
       },
-      { $unwind: "$comments" },
+      {
+        $unwind: {
+          path: "$comments",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -46,7 +54,12 @@ exports.getAllPosts = async (req, res) => {
           as: "comments.user",
         },
       },
-      { $unwind: "$comments.user" },
+      {
+        $unwind: {
+          path: "$comments.user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       {
         $project: {
           _id: 1,
