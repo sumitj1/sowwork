@@ -26,12 +26,19 @@ router.post(
 
 //discover routes
 router.get("/discover/post/get-all", authCustomer, DiscoverRouter.getAllPosts);
+router.post("/discover/post/report", authCustomer, DiscoverRouter.reportPost);
+
+//comment routes
 router.post(
   "/discover/post/add-comment",
   authCustomer,
   DiscoverRouter.addCommentOnPost
 );
-router.post("/discover/post/report", authCustomer, DiscoverRouter.reportPost);
+router.post(
+  "/discover/comment/report",
+  authCustomer,
+  DiscoverRouter.reportComment
+);
 
 //Bookmark routes
 router.get(

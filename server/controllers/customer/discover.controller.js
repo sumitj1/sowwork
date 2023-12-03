@@ -3,6 +3,7 @@ const {
   REPORT_TYPE_POST,
   STATUS_PENDING,
   STATUS_DELETED,
+  REPORT_TYPE_COMMENT,
 } = require("../../config/constants");
 const Post = require("../../models/Post");
 const Report = require("../../models/Report");
@@ -349,6 +350,32 @@ exports.removeBookmark = async (req, res) => {
     if (!updatedBookmark) throw new Error("Bookmark not found.");
 
     res.send({ error: false, message: "Bookmark Removed" });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Report Comment
+ * Type : POST
+ * Route : /customer/discover/comment/report
+ */
+exports.reportComment = async (req, res) => {
+  try {
+    const { _id, reason } = req.body;
+    const user_id = req.user._id;
+
+    let newReport = new Report({
+      reason,
+      type: REPORT_TYPE_COMMENT,
+      reported_to: _id,
+      reported_by: user_id,
+      status: STATUS_PENDING,
+    });
+
+    newReport = await newReport.save();
+
+    res.send({ error: false, message: "Comment Reported." });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
