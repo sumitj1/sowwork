@@ -9,7 +9,7 @@ const Bookmark = require("../../models/Bookmark");
  */
 exports.addPost = async (req, res) => {
   try {
-    const { image, category, id } = req.body;
+    const { image, category, id, caption } = req.body;
     const userId = req?.user?._id || id;
 
     let newTempUser = new Post({
@@ -17,6 +17,7 @@ exports.addPost = async (req, res) => {
       category,
       status: STATUS_ACTIVE,
       user: userId,
+      caption,
     });
 
     await newTempUser.save();

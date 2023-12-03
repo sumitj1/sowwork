@@ -9,7 +9,10 @@ const Post = require("../../models/Post");
 const Report = require("../../models/Report");
 const Bookmark = require("../../models/Bookmark");
 const mongoose = require("mongoose");
-const { formatNumber } = require("../../utils/common.functions");
+const {
+  formatNumber,
+  getTimeDifferenceText,
+} = require("../../utils/common.functions");
 const { ObjectId } = mongoose.Types;
 
 /**
@@ -68,10 +71,12 @@ exports.getAllPosts = async (req, res) => {
           image: 1,
           status: 1,
           reactions: 1,
+          caption: 1,
           user: {
             first_name: 1,
             last_name: 1,
             _id: 1,
+            profile_image: 1,
           },
           is_deleted: 1,
           created_at: 1,
@@ -93,6 +98,7 @@ exports.getAllPosts = async (req, res) => {
           image: { $first: "$image" },
           status: { $first: "$status" },
           reactions: { $first: "$reactions" },
+          caption: { $first: "$caption" },
           user: { $first: "$user" },
           is_deleted: { $first: "$is_deleted" },
           created_at: { $first: "$created_at" },
@@ -138,6 +144,7 @@ exports.getAllPosts = async (req, res) => {
           image: 1,
           status: 1,
           reactions: 1,
+          caption: 1,
           user: 1,
           is_deleted: 1,
           created_at: 1,
@@ -174,6 +181,9 @@ exports.getAllPosts = async (req, res) => {
       post.reactions.laugh = post?.reactions?.laugh?.length
         ? formatNumber(post?.reactions?.laugh?.length)
         : 0;
+
+      //formatting time
+      post.post_time = getTimeDifferenceText(post.created_at);
     }
 
     res.send({ error: false, data: posts });

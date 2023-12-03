@@ -25,12 +25,13 @@ const postSchema = new mongoose.Schema({
     enum: [STATUS_ACTIVE, STATUS_INACTIVE, STATUS_DELETED, STATUS_PENDING],
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  caption: { type: String, trim: true },
   comments: [commentSchema],
-  reactions : {
-    love : [String],
-    happy : [String],
-    surprise : [String],
-    laugh : [String]
+  reactions: {
+    love: [String],
+    happy: [String],
+    surprise: [String],
+    laugh: [String],
   },
   is_deleted: { type: Boolean, default: false },
   created_at: { type: Date, default: new Date() },
