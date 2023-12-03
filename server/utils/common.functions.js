@@ -23,6 +23,7 @@ const getTimeDifferenceText = (timestamp) => {
   } else if (hoursAgo < 24) {
     return `${hoursAgo} ${hoursAgo === 1 ? "hour" : "hours"} ago`;
   } else if (minutesAgo < 10080) {
+    //7 days into minutes
     return `${daysAgo} ${daysAgo === 1 ? "day" : "days"} ago`;
   } else {
     return moment(timestamp).format("ll");

@@ -23,6 +23,11 @@ router.post(
   authCustomer,
   IndexRouter.updateAddress
 );
+router.get(
+  "/my-profile/address/change-status/:type/:_id",
+  authCustomer,
+  IndexRouter.changeAddressStatus
+);
 
 //discover routes
 router.get("/discover/post/get-all", authCustomer, DiscoverRouter.getAllPosts);

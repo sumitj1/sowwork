@@ -266,3 +266,39 @@ exports.updateAddress = async (req, res) => {
     res.send({ error: true, message: error.message });
   }
 };
+
+/**
+ * Change Address Status
+ * TYPE : POST
+ * Route : /my-profile/address/change-status/:type/:id
+ */
+exports.changeAddressStatus = async (req, res) => {
+  try {
+    const { type, _id } = req.params;
+
+    let msg = "updated";
+    let obj = {
+      updated_at: new Date().toISOString(),
+    };
+    switch (type) {
+      case "delete":
+        obj.status = STATUS_DELETED;
+        obj.is_deleted = true;
+        obj.deleted_at = new Date().toISOString();
+        msg = "deleted";
+        break;
+
+      default:
+        break;
+    }
+
+    const updatedAddressStatus = await Address.findByIdAndUpdate(_id, {
+      $set: obj,
+    });
+
+    if (!updatedAddressStatus) throw new Error("Address not found.");
+    res.send({ error: false, message: `Address ${msg} successfully.` });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
