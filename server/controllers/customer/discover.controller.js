@@ -23,7 +23,6 @@ const { ObjectId } = mongoose.Types;
 exports.getAllPosts = async (req, res) => {
   try {
     const userId = req.user._id;
-
     const posts = await Post.aggregate([
       {
         $match: {
@@ -324,15 +323,166 @@ exports.bookmarkPost = async (req, res) => {
 exports.getBookmarks = async (req, res) => {
   try {
     const user_id = req.user._id;
+    let data = [];
+    let bookmarks = await Bookmark.aggregate([
+      {
+        $match: {
+          $and: [{ status: STATUS_ACTIVE }, { user: new ObjectId(user_id) }],
+        },
+      },
+      {
+        $sort: { created_at: -1 },
+      },
+      {
+        $lookup: {
+          from: "posts",
+          let: { postId: "$post" }, // Variable to hold the productId from orders
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$_id", "$$postId"] }],
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "user",
+                foreignField: "_id",
+                as: "user",
+              },
+            },
+            {
+              $unwind: {
+                path: "$user",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $unwind: {
+                path: "$comments",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "comments.user",
+                foreignField: "_id",
+                as: "comments.user",
+              },
+            },
+            {
+              $unwind: {
+                path: "$comments.user",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                category: 1,
+                image: 1,
+                status: 1,
+                reactions: 1,
+                caption: 1,
+                user: {
+                  first_name: 1,
+                  last_name: 1,
+                  _id: 1,
+                  profile_image: 1,
+                },
+                is_deleted: 1,
+                created_at: 1,
+                "comments._id": 1,
+                "comments.comment": 1,
+                "comments._is_deleted": 1,
+                "comments.created_at": 1,
+                "comments.user": {
+                  first_name: 1,
+                  last_name: 1,
+                  _id: 1,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: "$_id",
+                category: { $first: "$category" },
+                image: { $first: "$image" },
+                status: { $first: "$status" },
+                reactions: { $first: "$reactions" },
+                caption: { $first: "$caption" },
+                user: { $first: "$user" },
+                is_deleted: { $first: "$is_deleted" },
+                created_at: { $first: "$created_at" },
+                comments: { $push: "$comments" },
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                category: 1,
+                image: 1,
+                status: 1,
+                reactions: 1,
+                caption: 1,
+                user: 1,
+                is_deleted: 1,
+                created_at: 1,
+                comments: 1,
+                isBookmarked: true,
+              },
+            },
+          ],
+          as: "post", // Output field to store joined product information
+        },
+      },
+      {
+        $unwind: {
+          path: "$post",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
 
-    let bookmarks = await Bookmark.find({
-      status: STATUS_ACTIVE,
-      user: user_id,
-    })
-      .populate("post")
-      .sort("created_at : -1");
+    for (let bookmark of bookmarks) {
+      bookmark.post.bookmarkId = bookmark._id;
+      bookmark = bookmark.post;
+      // finding userId
+      if (bookmark?.reactions?.love?.includes(user_id)) {
+        bookmark.selectedReaction = "love";
+      } else if (bookmark?.reactions?.happy?.includes(user_id)) {
+        bookmark.selectedReaction = "happy";
+      } else if (bookmark?.reactions?.surprise?.includes(user_id)) {
+        bookmark.selectedReaction = "surprise";
+      } else if (bookmark?.reactions?.laugh?.includes(user_id)) {
+        bookmark.selectedReaction = "laugh";
+      } else {
+        bookmark.selectedReaction = null;
+      }
 
-    res.send({ error: false, data: bookmarks });
+      //setting count by rections length and formatting
+      bookmark.reactions.love = bookmark?.reactions?.love?.length
+        ? formatNumber(bookmark?.reactions?.love?.length)
+        : formatNumber(1500);
+      bookmark.reactions.happy = bookmark?.reactions?.happy?.length
+        ? formatNumber(bookmark?.reactions?.happy?.length)
+        : formatNumber(2300);
+      bookmark.reactions.surprise = bookmark?.reactions?.surprise?.length
+        ? formatNumber(bookmark?.reactions?.surprise?.length)
+        : formatNumber(100);
+      bookmark.reactions.laugh = bookmark?.reactions?.laugh?.length
+        ? formatNumber(bookmark?.reactions?.laugh?.length)
+        : formatNumber(4043);
+
+      //formatting time
+      bookmark.post_time = getTimeDifferenceText(bookmark.created_at);
+      data.push(bookmark);
+    }
+
+    res.send({ error: false, data: data });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
