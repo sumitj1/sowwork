@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const IndexRouter = require("../controllers/customer/index.controller");
 const DiscoverRouter = require("../controllers/customer/discover.controller");
+const NotificationRouter = require("../controllers/customer/notification.controller");
 
 const { authCustomer } = require("../middleware/auth.middleware");
 
@@ -61,6 +62,13 @@ router.get(
   "/discover/post/remove-bookmark/:postId",
   authCustomer,
   DiscoverRouter.removeBookmark
+);
+
+//notifications routes
+router.get(
+  "/notification",
+  authCustomer,
+  NotificationRouter.getAllNotifications
 );
 
 module.exports = router;
