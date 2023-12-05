@@ -171,16 +171,16 @@ exports.getAllPosts = async (req, res) => {
       //setting count by rections length and formatting
       post.reactions.love = post?.reactions?.love?.length
         ? formatNumber(post?.reactions?.love?.length)
-        : 0;
+        : formatNumber(1500);
       post.reactions.happy = post?.reactions?.happy?.length
         ? formatNumber(post?.reactions?.happy?.length)
-        : 0;
+        : formatNumber(2300);
       post.reactions.surprise = post?.reactions?.surprise?.length
         ? formatNumber(post?.reactions?.surprise?.length)
-        : 0;
+        : formatNumber(100);
       post.reactions.laugh = post?.reactions?.laugh?.length
         ? formatNumber(post?.reactions?.laugh?.length)
-        : 0;
+        : formatNumber(4043);
 
       //formatting time
       post.post_time = getTimeDifferenceText(post.created_at);
