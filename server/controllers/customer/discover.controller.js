@@ -440,16 +440,14 @@ exports.getBookmarks = async (req, res) => {
         },
       },
       {
-        $unwind: {
-          path: "$post",
-          preserveNullAndEmptyArrays: true,
-        },
+        $unwind: "$post",
       },
     ]);
 
     for (let bookmark of bookmarks) {
-      bookmark.post.bookmarkId = bookmark._id;
+      let bookmarkId = bookmark._id;
       bookmark = bookmark.post;
+      bookmark.bookmarkId = bookmarkId;
       // finding userId
       if (bookmark?.reactions?.love?.includes(user_id)) {
         bookmark.selectedReaction = "love";
