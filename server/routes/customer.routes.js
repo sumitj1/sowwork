@@ -33,6 +33,7 @@ router.get(
 //discover routes
 router.get("/discover/post/get-all", authCustomer, DiscoverRouter.getAllPosts);
 router.post("/discover/post/report", authCustomer, DiscoverRouter.reportPost);
+router.post("/discover/post/react", authCustomer, DiscoverRouter.reactOnPost);
 
 //comment routes
 router.post(

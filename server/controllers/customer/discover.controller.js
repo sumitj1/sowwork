@@ -561,3 +561,81 @@ exports.reportComment = async (req, res) => {
     res.send({ error: true, message: error.message });
   }
 };
+
+/**
+ * React on Post
+ * Type : POST
+ * Route : /customer/discover/post/react
+ */
+exports.reactOnPost = async (req, res) => {
+  try {
+    const { _id, reaction } = req.body;
+    console.log(
+      "🚀 ~ file: discover.controller.js:573 ~ exports.reactOnPost= ~ req.body:",
+      req.body
+    );
+    const user_id = req.user._id;
+    let reactionName;
+    let previousLikedReaction;
+    for (const elem of reaction) {
+      if (elem.isclick === true) reactionName = elem.name;
+    }
+    console.log(
+      "🚀 ~ file: discover.controller.js:577 ~ exports.reactOnPost= ~ reactionName:",
+      reactionName
+    );
+    const post = await Post.findById(_id).select("reactions");
+
+    //finding the user Id from reactions array if exists
+    if (post?.reactions?.happy.includes(user_id))
+      previousLikedReaction = "happy";
+    if (post?.reactions?.love.includes(user_id)) previousLikedReaction = "love";
+    if (post?.reactions?.laugh.includes(user_id))
+      previousLikedReaction = "laugh";
+    if (post?.reactions?.surprise.includes(user_id))
+      previousLikedReaction = "surprise";
+
+    //removing previous reactions
+    if (previousLikedReaction) {
+      let pullQuery = "reactions." + previousLikedReaction;
+      let query = {
+        [pullQuery]: user_id,
+      };
+      console.log(
+        "🚀 ~ file: discover.controller.js:606 ~ exports.reactOnPost= ~ query:",
+        query
+      );
+
+      let updatedPost = await Post.findByIdAndUpdate(
+        _id,
+        { $pull: query },
+        { new: true }
+      );
+      if (!updatedPost)
+        throw new Error("Unable to remove previous liked Emoji.");
+    }
+
+    //pushing new reaction
+    if (reactionName) {
+      let pushQuery = "reactions." + reactionName;
+      let query = {
+        [pushQuery]: user_id,
+      };
+      console.log(
+        "🚀 ~ file: discover.controller.js:606 ~ exports.reactOnPost= ~ query:",
+        query
+      );
+
+      let updatedPost = await Post.findByIdAndUpdate(
+        _id,
+        { $push: query },
+        { new: true }
+      );
+      if (!updatedPost) throw new Error("Unable to push liked Emoji.");
+    }
+
+    res.send({ error: false, message: "Reacted Successfully." });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
