@@ -22,7 +22,7 @@ const { ObjectId } = mongoose.Types;
  */
 exports.getAllPosts = async (req, res) => {
   try {
-    const userId = "655e3c4505094bd157014280";
+    const userId = req.user._id;
     const posts = await Post.aggregate([
       {
         $match: {
