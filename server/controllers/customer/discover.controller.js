@@ -22,7 +22,7 @@ const { ObjectId } = mongoose.Types;
  */
 exports.getAllPosts = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = "655e3c4505094bd157014280";
     const posts = await Post.aggregate([
       {
         $match: {
@@ -154,39 +154,62 @@ exports.getAllPosts = async (req, res) => {
     ]);
 
     for (let post of posts) {
+      let reactions = [];
       // finding userId
-      if (post?.reactions?.love?.includes(userId)) {
-        post.selectedReaction = "love";
-      } else if (post?.reactions?.happy?.includes(userId)) {
-        post.selectedReaction = "happy";
-      } else if (post?.reactions?.surprise?.includes(userId)) {
-        post.selectedReaction = "surprise";
-      } else if (post?.reactions?.laugh?.includes(userId)) {
-        post.selectedReaction = "laugh";
-      } else {
-        post.selectedReaction = null;
-      }
+      // if (post?.reactions?.love?.includes(userId)) {
+      //   post.selectedReaction = "love";
+      // } else if (post?.reactions?.happy?.includes(userId)) {
+      //   post.selectedReaction = "happy";
+      // } else if (post?.reactions?.surprise?.includes(userId)) {
+      //   post.selectedReaction = "surprise";
+      // } else if (post?.reactions?.laugh?.includes(userId)) {
+      //   post.selectedReaction = "laugh";
+      // } else {
+      //   post.selectedReaction = null;
+      // }
 
       //setting count by rections length and formatting
-      post.reactions.love = post?.reactions?.love?.length
-        ? formatNumber(post?.reactions?.love?.length)
-        : formatNumber(1500);
-      post.reactions.happy = post?.reactions?.happy?.length
-        ? formatNumber(post?.reactions?.happy?.length)
-        : formatNumber(2300);
-      post.reactions.surprise = post?.reactions?.surprise?.length
-        ? formatNumber(post?.reactions?.surprise?.length)
-        : formatNumber(100);
-      post.reactions.laugh = post?.reactions?.laugh?.length
-        ? formatNumber(post?.reactions?.laugh?.length)
-        : formatNumber(4043);
+      // post.reactions.love = post?.reactions?.love?.length
+      //   ? formatNumber(post?.reactions?.love?.length)
+      //   : formatNumber(1500);
+      // post.reactions.happy = post?.reactions?.happy?.length
+      //   ? formatNumber(post?.reactions?.happy?.length)
+      //   : formatNumber(2300);
+      // post.reactions.surprise = post?.reactions?.surprise?.length
+      //   ? formatNumber(post?.reactions?.surprise?.length)
+      //   : formatNumber(100);
+      // post.reactions.laugh = post?.reactions?.laugh?.length
+      //   ? formatNumber(post?.reactions?.laugh?.length)
+      //   : formatNumber(4043);
+
+      const keys = Object.keys(post?.reactions);
+
+      // Looping through the object using the keys and accessing the index
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        let value = post?.reactions[key];
+
+        reactions.push({
+          id: i,
+          img: i,
+          isclick: value.includes(userId),
+          count: value.length,
+          name: key,
+        });
+      }
 
       //formatting time
       post.post_time = getTimeDifferenceText(post.created_at);
+      post.reaction = reactions;
+      delete post.reactions;
     }
 
     res.send({ error: false, data: posts });
   } catch (error) {
+    console.log(
+      "🚀 ~ file: discover.controller.js:209 ~ exports.getAllPosts= ~ error:",
+      error
+    );
     res.send({ error: true, message: error.message });
   }
 };
