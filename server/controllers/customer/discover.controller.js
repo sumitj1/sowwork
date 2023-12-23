@@ -23,6 +23,10 @@ const { ObjectId } = mongoose.Types;
 exports.getAllPosts = async (req, res) => {
   try {
     const userId = req.user._id;
+    console.log(
+      "🚀 ~ file: discover.controller.js:26 ~ exports.getAllPosts= ~ userId:",
+      userId
+    );
     const posts = await Post.aggregate([
       {
         $match: {
@@ -50,6 +54,11 @@ exports.getAllPosts = async (req, res) => {
         },
       },
       {
+        $match: {
+          "comments.status": STATUS_ACTIVE,
+        },
+      },
+      {
         $lookup: {
           from: "users",
           localField: "comments.user",
@@ -60,6 +69,20 @@ exports.getAllPosts = async (req, res) => {
       {
         $unwind: {
           path: "$comments.user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "address",
+          localField: "user",
+          foreignField: "user",
+          as: "address",
+        },
+      },
+      {
+        $unwind: {
+          path: "$address",
           preserveNullAndEmptyArrays: true,
         },
       },
@@ -182,21 +205,44 @@ exports.getAllPosts = async (req, res) => {
       //   ? formatNumber(post?.reactions?.laugh?.length)
       //   : formatNumber(4043);
 
+      // console.log(
+      //   "🚀 ~ file: discover.controller.js:209 ~ exports.getAllPosts= ~ post?.reactions:",
+      //   post?.reactions
+      // );
       const keys = Object.keys(post?.reactions);
 
+      let reaction = ["love", "surprise", "laugh", "happy"];
       // Looping through the object using the keys and accessing the index
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        let value = post?.reactions[key];
-
+      for (let i = 0; i < reaction.length; i++) {
         reactions.push({
           id: i,
-          img: i,
-          isclick: value.includes(userId),
-          count: value.length,
-          name: key,
+          img: i + 6,
+          isclick: post?.reactions[reaction[i]]?.includes(userId),
+          count: post?.reactions[reaction[i]]?.length,
+          name: reaction[i],
         });
       }
+
+      // for (let i = 0; i < keys.length; i++) {
+      //   const key = keys[i];
+      //   console.log(
+      //     "🚀 ~ file: discover.controller.js:230 ~ exports.getAllPosts= ~ key:",
+      //     key
+      //   );
+      //   let value = post?.reactions[key];
+      //   console.log(
+      //     "🚀 ~ file: discover.controller.js:219 ~ exports.getAllPosts= ~ value:",
+      //     value
+      //   );
+
+      //   reactions.push({
+      //     id: i,
+      //     img: i,
+      //     isclick: value.includes(userId),
+      //     count: value.length,
+      //     name: key,
+      //   });
+      // }
 
       //formatting time
       post.post_time = getTimeDifferenceText(post.created_at);
@@ -282,10 +328,20 @@ exports.reportPost = async (req, res) => {
     const { _id, reason } = req.body;
     const user_id = req.user._id;
 
+    //checking if already reported
+    let report = await Report.findOne({
+      type: REPORT_TYPE_POST,
+      reported_to: _id,
+      reported_by: user_id,
+    });
+
+    if (report) throw new Error("Already Reported!");
+
     let newReport = new Report({
       reason,
       type: REPORT_TYPE_POST,
       reported_to: _id,
+      post_id: _id,
       reported_by: user_id,
       status: STATUS_PENDING,
     });
@@ -386,6 +442,11 @@ exports.getBookmarks = async (req, res) => {
               $unwind: {
                 path: "$comments",
                 preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $match: {
+                "comments.status": STATUS_ACTIVE,
               },
             },
             {
@@ -546,10 +607,25 @@ exports.reportComment = async (req, res) => {
     const { _id, reason } = req.body;
     const user_id = req.user._id;
 
+    //checking if already reported
+    let report = await Report.findOne({
+      type: REPORT_TYPE_COMMENT,
+      reported_to: _id,
+      reported_by: user_id,
+    });
+
+    if (report) throw new Error("Already Reported!");
+
+    let postData = await Post.findOne({
+      "comments._id": new ObjectId(_id),
+    }).populate("comments");
+
+    if (!postData) throw new Error("Post not found");
     let newReport = new Report({
       reason,
       type: REPORT_TYPE_COMMENT,
       reported_to: _id,
+      post_id: postData._id,
       reported_by: user_id,
       status: STATUS_PENDING,
     });
