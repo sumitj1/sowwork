@@ -27,6 +27,10 @@ exports.getAllPosts = async (req, res) => {
       "🚀 ~ file: discover.controller.js:26 ~ exports.getAllPosts= ~ userId:",
       userId
     );
+    console.log(
+      "🚀 ~ file: discover.controller.js:26 ~ exports.getAllPosts= ~ userId:",
+      userId
+    );
     const posts = await Post.aggregate([
       {
         $match: {
@@ -218,9 +222,30 @@ exports.getAllPosts = async (req, res) => {
       //   });
       // }
 
+      // for (let i = 0; i < keys.length; i++) {
+      //   const key = keys[i];
+      //   let value = post?.reactions[key];
+
+      //   reactions.push({
+      //     id: i,
+      //     img: i + 6,
+      //     isclick: post?.reactions[reaction[i]]?.includes(userId),
+      //     count: post?.reactions[reaction[i]]?.length,
+      //     name: reaction[i],
+      //   });
+      // }
+
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
+        console.log(
+          "🚀 ~ file: discover.controller.js:230 ~ exports.getAllPosts= ~ key:",
+          key
+        );
         let value = post?.reactions[key];
+        console.log(
+          "🚀 ~ file: discover.controller.js:219 ~ exports.getAllPosts= ~ value:",
+          value
+        );
 
         reactions.push({
           id: i,
