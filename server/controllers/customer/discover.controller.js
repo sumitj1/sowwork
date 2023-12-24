@@ -541,7 +541,7 @@ exports.getBookmarks = async (req, res) => {
       let bookmarkId = bookmark._id;
       bookmark = bookmark.post;
       bookmark.bookmarkId = bookmarkId;
-      reactions = [];
+      let reactions = [];
       // finding userId
       // if (bookmark?.reactions?.love?.includes(user_id)) {
       //   bookmark.selectedReaction = "love";
@@ -583,7 +583,7 @@ exports.getBookmarks = async (req, res) => {
 
       //formatting time
       bookmark.post_time = getTimeDifferenceText(bookmark.created_at);
-      bookmark.reactions;
+      bookmark.reaction = reactions;
       delete bookmark.reactions;
       data.push(bookmark);
     }
