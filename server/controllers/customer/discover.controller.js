@@ -23,14 +23,7 @@ const { ObjectId } = mongoose.Types;
 exports.getAllPosts = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(
-      "🚀 ~ file: discover.controller.js:26 ~ exports.getAllPosts= ~ userId:",
-      userId
-    );
-    console.log(
-      "🚀 ~ file: discover.controller.js:26 ~ exports.getAllPosts= ~ userId:",
-      userId
-    );
+
     const posts = await Post.aggregate([
       {
         $match: {
@@ -208,19 +201,19 @@ exports.getAllPosts = async (req, res) => {
       // post.reactions.laugh = post?.reactions?.laugh?.length
       //   ? formatNumber(post?.reactions?.laugh?.length)
       //   : formatNumber(4043);
-      const keys = Object.keys(post?.reactions);
+      // const keys = Object.keys(post?.reactions);
 
-      // let reaction = ["love", "surprise", "laugh", "happy"];
-      // Looping through the object using the keys and accessing the index
-      // for (let i = 0; i < reaction.length; i++) {
-      //   reactions.push({
-      //     id: i,
-      //     img: i + 6,
-      //     isclick: post?.reactions[reaction[i]]?.includes(userId),
-      //     count: post?.reactions[reaction[i]]?.length,
-      //     name: reaction[i],
-      //   });
-      // }
+      let reaction = ["love", "surprise", "laugh", "happy"];
+      //Looping through the object using the keys and accessing the index
+      for (let i = 0; i < reaction.length; i++) {
+        reactions.push({
+          id: i,
+          img: i + 6,
+          isclick: post?.reactions[reaction[i]]?.includes(userId),
+          count: post?.reactions[reaction[i]]?.length,
+          name: reaction[i],
+        });
+      }
 
       // for (let i = 0; i < keys.length; i++) {
       //   const key = keys[i];
@@ -235,26 +228,26 @@ exports.getAllPosts = async (req, res) => {
       //   });
       // }
 
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        console.log(
-          "🚀 ~ file: discover.controller.js:230 ~ exports.getAllPosts= ~ key:",
-          key
-        );
-        let value = post?.reactions[key];
-        console.log(
-          "🚀 ~ file: discover.controller.js:219 ~ exports.getAllPosts= ~ value:",
-          value
-        );
+      // for (let i = 0; i < keys.length; i++) {
+      //   const key = keys[i];
+      //   console.log(
+      //     "🚀 ~ file: discover.controller.js:230 ~ exports.getAllPosts= ~ key:",
+      //     key
+      //   );
+      //   let value = post?.reactions[key];
+      //   console.log(
+      //     "🚀 ~ file: discover.controller.js:219 ~ exports.getAllPosts= ~ value:",
+      //     value
+      //   );
 
-        reactions.push({
-          id: i,
-          img: i,
-          isclick: value.includes(userId),
-          count: value.length,
-          name: key,
-        });
-      }
+      //   reactions.push({
+      //     id: i,
+      //     img: i,
+      //     isclick: value.includes(userId),
+      //     count: value.length,
+      //     name: key,
+      //   });
+      // }
 
       //formatting time
       post.post_time = getTimeDifferenceText(post.created_at);
@@ -414,6 +407,10 @@ exports.bookmarkPost = async (req, res) => {
 exports.getBookmarks = async (req, res) => {
   try {
     const user_id = req.user._id;
+    console.log(
+      "🚀 ~ file: discover.controller.js:410 ~ exports.getBookmarks= ~ user_id:",
+      user_id
+    );
     let data = [];
     let bookmarks = await Bookmark.aggregate([
       {
@@ -456,11 +453,11 @@ exports.getBookmarks = async (req, res) => {
                 preserveNullAndEmptyArrays: true,
               },
             },
-            {
-              $match: {
-                "comments.status": STATUS_ACTIVE,
-              },
-            },
+            // {
+            //   $match: {
+            //     "comments.status": STATUS_ACTIVE,
+            //   },
+            // },
             {
               $lookup: {
                 from: "users",
@@ -544,35 +541,50 @@ exports.getBookmarks = async (req, res) => {
       let bookmarkId = bookmark._id;
       bookmark = bookmark.post;
       bookmark.bookmarkId = bookmarkId;
+      reactions = [];
       // finding userId
-      if (bookmark?.reactions?.love?.includes(user_id)) {
-        bookmark.selectedReaction = "love";
-      } else if (bookmark?.reactions?.happy?.includes(user_id)) {
-        bookmark.selectedReaction = "happy";
-      } else if (bookmark?.reactions?.surprise?.includes(user_id)) {
-        bookmark.selectedReaction = "surprise";
-      } else if (bookmark?.reactions?.laugh?.includes(user_id)) {
-        bookmark.selectedReaction = "laugh";
-      } else {
-        bookmark.selectedReaction = null;
-      }
+      // if (bookmark?.reactions?.love?.includes(user_id)) {
+      //   bookmark.selectedReaction = "love";
+      // } else if (bookmark?.reactions?.happy?.includes(user_id)) {
+      //   bookmark.selectedReaction = "happy";
+      // } else if (bookmark?.reactions?.surprise?.includes(user_id)) {
+      //   bookmark.selectedReaction = "surprise";
+      // } else if (bookmark?.reactions?.laugh?.includes(user_id)) {
+      //   bookmark.selectedReaction = "laugh";
+      // } else {
+      //   bookmark.selectedReaction = null;
+      // }
 
       //setting count by rections length and formatting
-      bookmark.reactions.love = bookmark?.reactions?.love?.length
-        ? formatNumber(bookmark?.reactions?.love?.length)
-        : formatNumber(1500);
-      bookmark.reactions.happy = bookmark?.reactions?.happy?.length
-        ? formatNumber(bookmark?.reactions?.happy?.length)
-        : formatNumber(2300);
-      bookmark.reactions.surprise = bookmark?.reactions?.surprise?.length
-        ? formatNumber(bookmark?.reactions?.surprise?.length)
-        : formatNumber(100);
-      bookmark.reactions.laugh = bookmark?.reactions?.laugh?.length
-        ? formatNumber(bookmark?.reactions?.laugh?.length)
-        : formatNumber(4043);
+      // bookmark.reactions.love = bookmark?.reactions?.love?.length
+      //   ? formatNumber(bookmark?.reactions?.love?.length)
+      //   : formatNumber(1500);
+      // bookmark.reactions.happy = bookmark?.reactions?.happy?.length
+      //   ? formatNumber(bookmark?.reactions?.happy?.length)
+      //   : formatNumber(2300);
+      // bookmark.reactions.surprise = bookmark?.reactions?.surprise?.length
+      //   ? formatNumber(bookmark?.reactions?.surprise?.length)
+      //   : formatNumber(100);
+      // bookmark.reactions.laugh = bookmark?.reactions?.laugh?.length
+      //   ? formatNumber(bookmark?.reactions?.laugh?.length)
+      //   : formatNumber(4043);
+
+      let reaction = ["love", "surprise", "laugh", "happy"];
+      // Looping through the object using the keys and accessing the index
+      for (let i = 0; i < reaction.length; i++) {
+        reactions.push({
+          id: i,
+          img: i + 6,
+          isclick: bookmark?.reactions[reaction[i]]?.includes(user_id),
+          count: bookmark?.reactions[reaction[i]]?.length,
+          name: reaction[i],
+        });
+      }
 
       //formatting time
       bookmark.post_time = getTimeDifferenceText(bookmark.created_at);
+      bookmark.reactions;
+      delete bookmark.reactions;
       data.push(bookmark);
     }
 
