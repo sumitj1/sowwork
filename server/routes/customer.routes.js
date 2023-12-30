@@ -25,9 +25,9 @@ router.post(
   IndexRouter.updateAddress
 );
 router.get(
-  "/my-profile/address/change-status/:type/:_id",
+  "/my-profile/address/delete/:_id",
   authCustomer,
-  IndexRouter.changeAddressStatus
+  IndexRouter.deleteStatus
 );
 
 //discover routes

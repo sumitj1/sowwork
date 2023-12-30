@@ -268,36 +268,27 @@ exports.updateAddress = async (req, res) => {
 };
 
 /**
- * Change Address Status
- * TYPE : POST
- * Route : /my-profile/address/change-status/:type/:id
+ * Delete Status
+ * TYPE : GET
+ * Route : /my-profile/address/delete/:id
  */
-exports.changeAddressStatus = async (req, res) => {
+exports.deleteStatus = async (req, res) => {
   try {
-    const { type, _id } = req.params;
+    const { _id } = req.params;
 
-    let msg = "updated";
     let obj = {
       updated_at: new Date().toISOString(),
+      status: STATUS_DELETED,
+      is_deleted: true,
+      deleted_at: new Date().toISOString(),
     };
-    switch (type) {
-      case "delete":
-        obj.status = STATUS_DELETED;
-        obj.is_deleted = true;
-        obj.deleted_at = new Date().toISOString();
-        msg = "deleted";
-        break;
-
-      default:
-        break;
-    }
 
     const updatedAddressStatus = await Address.findByIdAndUpdate(_id, {
       $set: obj,
     });
 
     if (!updatedAddressStatus) throw new Error("Address not found.");
-    res.send({ error: false, message: `Address ${msg} successfully.` });
+    res.send({ error: false, message: `Address deleted successfully.` });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
