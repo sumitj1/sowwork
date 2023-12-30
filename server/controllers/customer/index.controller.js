@@ -44,13 +44,13 @@ exports.loginStep1 = async (req, res) => {
         },
       })
         .then(() => {
-          return res.send({ error: false, code });
+          return res.send({ error: false, code, isNewUser: true });
         })
         .catch((error) => {
           throw new Error(error.message);
         });
     } else {
-      //if phone number if found
+      //if phone number is found
       if (user.status == STATUS_INACTIVE)
         throw new Error("Account is inactive, please contact admin.");
 
@@ -65,7 +65,7 @@ exports.loginStep1 = async (req, res) => {
         },
       })
         .then(() => {
-          return res.send({ error: false, code });
+          return res.send({ error: false, code, isNewUser: false });
         })
         .catch((error) => {
           throw new Error(error.message);
