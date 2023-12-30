@@ -2,7 +2,7 @@ const router = require("express").Router();
 const IndexRouter = require("../controllers/customer/index.controller");
 const DiscoverRouter = require("../controllers/customer/discover.controller");
 const NotificationRouter = require("../controllers/customer/notification.controller");
-
+const ArtistRouter = require("../controllers/customer/artist.controller");
 const { authCustomer } = require("../middleware/auth.middleware");
 
 //common routes
@@ -71,5 +71,8 @@ router.get(
   authCustomer,
   NotificationRouter.getAllNotifications
 );
+
+//artist routes
+router.get("/artist/get-by-id/:_id", authCustomer, ArtistRouter.getArtistById);
 
 module.exports = router;
