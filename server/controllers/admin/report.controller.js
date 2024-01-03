@@ -5,6 +5,7 @@ const {
   REPORT_TYPE_COMMENT,
   STATUS_INACTIVE,
   STATUS_RESOLVED,
+  STATUS_BLOCKED,
 } = require("../../config/constants");
 const Post = require("../../models/Post");
 const Report = require("../../models/Report");
@@ -83,7 +84,17 @@ exports.getPostReports = async (req, res) => {
       },
     ]);
 
-    res.send({ error: false, data: postReports });
+    const blockedCount = await Report.find({
+      status: STATUS_BLOCKED,
+      type: REPORT_TYPE_COMMENT,
+    }).count();
+
+    res.send({
+      error: false,
+      data: postReports,
+      reportedCount: postReports.length,
+      blockedCount: blockedCount,
+    });
   } catch (error) {
     console.log(
       "🚀 ~ file: report.controller.js:12 ~ exports.getReports=async ~ error:",
@@ -198,7 +209,17 @@ exports.getCommentReports = async (req, res) => {
       },
     ]);
 
-    res.send({ error: false, data: commentReports });
+    const blockedCount = await Report.find({
+      status: STATUS_BLOCKED,
+      type: REPORT_TYPE_COMMENT,
+    }).count();
+
+    res.send({
+      error: false,
+      data: commentReports,
+      reportedCount: commentReports.length,
+      blockedCount: blockedCount,
+    });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
@@ -221,7 +242,7 @@ exports.changeCommentStatus = async (req, res) => {
           },
           {
             $set: {
-              "comments.$.status": STATUS_INACTIVE,
+              "comments.$.status": STATUS_BLOCKED,
               updated_at: new Date().toISOString(),
             },
           },
@@ -236,7 +257,7 @@ exports.changeCommentStatus = async (req, res) => {
           },
           {
             $set: {
-              status: STATUS_RESOLVED,
+              status: STATUS_BLOCKED,
               updated_at: new Date().toISOString(),
             },
           },
@@ -287,7 +308,7 @@ exports.changePostStatus = async (req, res) => {
       case "block":
         await Post.findByIdAndUpdate(new ObjectId(post_id), {
           $set: {
-            status: STATUS_INACTIVE,
+            status: STATUS_BLOCKED,
             updated_at: new Date().toISOString(),
           },
         });
@@ -298,7 +319,7 @@ exports.changePostStatus = async (req, res) => {
           },
           {
             $set: {
-              status: STATUS_RESOLVED,
+              status: STATUS_BLOCKED,
               updated_at: new Date().toISOString(),
             },
           }

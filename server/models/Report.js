@@ -6,6 +6,8 @@ const {
   STATUS_INACTIVE,
   STATUS_DELETED,
   STATUS_PENDING,
+  STATUS_RESOLVED,
+  STATUS_BLOCKED,
 } = require("../config/constants");
 
 const reportSchema = new mongoose.Schema({
@@ -20,7 +22,14 @@ const reportSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: [STATUS_ACTIVE, STATUS_INACTIVE, STATUS_DELETED, STATUS_PENDING],
+    enum: [
+      STATUS_ACTIVE,
+      STATUS_INACTIVE,
+      STATUS_DELETED,
+      STATUS_PENDING,
+      STATUS_RESOLVED,
+      STATUS_BLOCKED,
+    ],
   },
   is_deleted: { type: Boolean, default: false },
   created_at: { type: Date, default: new Date() },

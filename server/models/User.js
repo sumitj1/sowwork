@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema({
     code: { type: String, default: null },
     expired: { type: Boolean, default: false },
   },
+  about: { type: String, trim: true },
   is_deleted: { type: Boolean, default: false },
   created_at: { type: Date, default: new Date() },
   updated_at: { type: Date, default: new Date() },
