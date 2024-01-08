@@ -1,0 +1,63 @@
+<div class="public-wrapper">
+  <div class="loginBase">
+    <div class="loginContainer">
+      <div class="logoContiner">
+        <img src="../../../../../assets/images/logo.svg" alt="" />
+      </div>
+      <div>
+        <h2 class="adminPanel">ADMIN PANEL</h2>
+      </div>
+      <form
+        class="formContainer"
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="textFieldContainer">
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="Email address"
+            class="form-control textField"
+            [ngClass]="{
+              'is-invalid':
+                (submitted || form.email.touched) && form.email.errors
+            }"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="(submitted || form.email.touched) && form.email.errors"
+          >
+            <div *ngIf="form.email.errors['required']">Email is required.</div>
+            <div *ngIf="form.email.errors['pattern']">Email is inavlid.</div>
+          </div>
+        </div>
+        <div class="textFieldContainer">
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            [ngClass]="{
+              'is-invalid':
+                (submitted || form.password.touched) && form.password.errors
+            }"
+            type="password"
+            placeholder="Password"
+            class="form-control textField"
+          />
+          <img
+            src="../../../../../assets/images/eye.svg"
+            alt=""
+            class="passwordEye cursor-pointer"
+            (click)="togglePasswordType()"
+          />
+        </div>
+        <div class="submitContainer">
+          <button mat-raised-button type="submit" [disabled]="!loginForm.valid">
+            LOGIN
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

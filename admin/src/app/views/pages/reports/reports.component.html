@@ -1,0 +1,32 @@
+<app-sidebar></app-sidebar>
+<section class="reportsContainer">
+  <div class="reportHeadder">
+    <div class="reportHeadding">{{ headingTitle }} reports</div>
+    <div class="headActionContainer">
+      <div class="headActionWrap">
+        <button
+          mat-raised-btn
+          routerLink="posts"
+          class="headButton"
+          routerLinkActive="active"
+          (click)="updateHeadingitle('Post')"
+        >
+          Posts
+        </button>
+        <button
+          mat-raised-btn
+          routerLink="comments"
+          class="headButton"
+          routerLinkActive="active"
+          (click)="updateHeadingitle('Comment')"
+        >
+          Comments
+        </button>
+      </div>
+
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</section>

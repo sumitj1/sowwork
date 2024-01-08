@@ -1,0 +1,126 @@
+<section class="postsContainer">
+  <div class="mainWrapper">
+    <input
+      type="text"
+      class="searchSection"
+      placeholder="Search by ID"
+      (keyup)="search($event)"
+    />
+    <div class="cardSection">
+      <div class="commentCard" *ngFor="let elem of listData">
+        <div class="commentInfo">
+          <div class="ImgWrapper">
+            <img src="../../../../../../assets/images/commentImg.jpg" />
+          </div>
+          <div class="commentHead">
+            <h4 class="mainHead font-medium">
+              {{ elem?.comments?.user?.first_name }}
+              {{ elem?.comments?.user?.last_name }}
+            </h4>
+            <p class="mainHead font-light">{{ elem?.comments?.comment }}</p>
+          </div>
+          <div class="timeStamp">
+            {{ getTimeDifferenceText(elem?.created_at) }}
+          </div>
+        </div>
+        <div class="commentAction">
+          <div class="w-3/6">
+            <span
+              class="commentData font-medium"
+              style="font-size: 1.1rem; font-weight: 600"
+              >Number of reports:&nbsp;</span
+            >
+            <span class="commentData font-light">{{ elem?.report_count }}</span>
+          </div>
+          <div class="flex">
+            <button
+              class="blockBtn"
+              (click)="reportChangeStatus('block', elem?.comments?._id)"
+            >
+              Block
+            </button>
+            <button
+              class="IgnoreBtn"
+              (click)="reportChangeStatus('ignore', elem?.comments?._id)"
+            >
+              Ignore
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chartWrapper">
+    <ng-container>
+      <div class="cardContainer jobscomplete">
+        <div class="cardHead">Reported Comment</div>
+        <div class="cardAmount">
+          <span>
+            <h4 class="amount">{{ reportedCount }}</h4>
+          </span>
+          <span>
+            <img
+              src="../../../../../assets/images/chart1.svg"
+              class="amountImg"
+            />
+          </span>
+        </div>
+        <div class="cardDetails">
+          <span class="arrowWrap arrow-danger">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="8"
+              height="10"
+              viewBox="0 0 8 12"
+              fill="none"
+            >
+              <path
+                d="M4.35355 0.646446C4.15829 0.451184 3.84171 0.451184 3.64645 0.646446L0.464466 3.82843C0.269204 4.02369 0.269204 4.34027 0.464466 4.53553C0.659729 4.7308 0.976311 4.7308 1.17157 4.53553L4 1.70711L6.82843 4.53553C7.02369 4.7308 7.34027 4.7308 7.53553 4.53553C7.7308 4.34027 7.7308 4.02369 7.53553 3.82843L4.35355 0.646446ZM4.5 12L4.5 1L3.5 1L3.5 12L4.5 12Z"
+                fill="#5D9E57"
+              />
+            </svg>
+          </span>
+          <span>
+            <p class="textWrap textError">12% increase from last week</p>
+          </span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div class="cardContainer jobscomplete">
+        <div class="cardHead">Blocked Comment</div>
+        <div class="cardAmount">
+          <span>
+            <h4 class="amount">{{ blockedCount }}</h4>
+          </span>
+          <span>
+            <img
+              src="../../../../../assets/images/chart1.svg"
+              class="amountImg"
+            />
+          </span>
+        </div>
+        <div class="cardDetails">
+          <span class="arrowWrap arrow-success">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="8"
+              height="10"
+              viewBox="0 0 8 12"
+              fill="none"
+            >
+              <path
+                d="M4.35355 0.646446C4.15829 0.451184 3.84171 0.451184 3.64645 0.646446L0.464466 3.82843C0.269204 4.02369 0.269204 4.34027 0.464466 4.53553C0.659729 4.7308 0.976311 4.7308 1.17157 4.53553L4 1.70711L6.82843 4.53553C7.02369 4.7308 7.34027 4.7308 7.53553 4.53553C7.7308 4.34027 7.7308 4.02369 7.53553 3.82843L4.35355 0.646446ZM4.5 12L4.5 1L3.5 1L3.5 12L4.5 12Z"
+                fill="#5D9E57"
+              />
+            </svg>
+          </span>
+          <span>
+            <p class="textWrap text-success">12% increase from last week</p>
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>

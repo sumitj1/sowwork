@@ -1,0 +1,31 @@
+section {
+  margin-left: 250px;
+  padding: 55px;
+  background-color: #f3f3f3;
+  min-height: 100vh;
+  font-family: Poppins;
+}
+.heading {
+  color: #000;
+  font-feature-settings: "clig" off, "liga" off;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.25rem; /* 62.5% */
+  letter-spacing: 0.00938rem;
+}
+
+.mainWrapper {
+  flex: 0 0 65%;
+  .searchSection {
+    border-radius: 5px;
+    background: #fff;
+    padding: 8px 25px;
+    color: #8d8d8d;
+    font-size: 16px;
+    font-weight: 300;
+    border: none !important;
+    outline: none !important;
+    width: 100%;
+  }
+}

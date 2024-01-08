@@ -1,0 +1,62 @@
+<div class="sideNavContainer">
+  <div class="navHeader text-center">
+    <img src="../../../../../assets/images/side-nav-logo.svg" alt="logo" />
+  </div>
+  <div class="navMenuContainer">
+    <div>
+      <div class="navSection">
+        <h4 class="sectionHead">IMPORTANT</h4>
+        <div class="sectionMenu">
+          <p
+            class="sectionMenuItem"
+            routerLink="/overview"
+            routerLinkActive="selected"
+          >
+            Overview
+          </p>
+          <p
+            class="sectionMenuItem"
+            routerLink="/report"
+            routerLinkActive="selected"
+          >
+            Reports
+          </p>
+        </div>
+      </div>
+      <div class="navSection">
+        <h4 class="sectionHead">USERS</h4>
+        <div class="sectionMenu">
+          <p
+            class="sectionMenuItem"
+            routerLink="/customer"
+            routerLinkActive="selected"
+          >
+            Customers
+          </p>
+          <p class="sectionMenuItem">Artists</p>
+        </div>
+      </div>
+      <div class="navSection">
+        <h4 class="sectionHead">WORK</h4>
+        <div class="sectionMenu">
+          <p class="sectionMenuItem">Jobs</p>
+          <p class="sectionMenuItem">Roles</p>
+          <p class="sectionMenuItem">Filters</p>
+          <p class="sectionMenuItem">Transcations</p>
+        </div>
+      </div>
+      <div class="navSection">
+        <h4 class="sectionHead">SOCIAL MEDIA</h4>
+        <div class="sectionMenu">
+          <p class="sectionMenuItem">Posts</p>
+          <p class="sectionMenuItem">Roles</p>
+          <p class="sectionMenuItem">Tags</p>
+          <p class="sectionMenuItem">Ads</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="buttonContainer">
+    <button class="sectionButton selected" (click)="logout()">Logout ></button>
+  </div>
+</div>
