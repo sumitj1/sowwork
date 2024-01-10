@@ -28,3 +28,33 @@ exports.saveBasicInfo = async (req, res) => {
     res.send({ error: true, message: error.message });
   }
 };
+
+/**
+ * Profile : Address
+ * Type : POST
+ * Route : /artist/profile/address-info
+ */
+exports.saveAddressInfo = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { address_line_1, address_line_2, landmark, pincode, city, state } =
+      req.body;
+
+    User.findByIdAndUpdate(_id, {
+      $set: {
+        address: {
+          address_line_1,
+          address_line_2,
+          landmark,
+          pincode,
+          city,
+          state,
+        },
+      },
+    }).then(() => {
+      res.send({ error: false, message: "Address updated" });
+    });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};

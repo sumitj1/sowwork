@@ -20,7 +20,14 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
   },
   phone_number: { type: String, trim: true, unique: true },
-  address: { type: String, trim: true },
+  address: {
+    address_line_1: { type: String },
+    address_line_2: { type: String },
+    landmark: { type: String },
+    pincode: { type: String },
+    city: { type: String },
+    state: { type: String },
+  },
   profile_image: { type: String, default: "avatar.png" },
   user_role: {
     type: String,
