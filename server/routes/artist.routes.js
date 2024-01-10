@@ -32,5 +32,10 @@ router.post("/notification", NotificationRouter.addNotification);
 //profile routes
 router.post("/profile/basic-info", authArtist, ProfileRouter.saveBasicInfo);
 router.post("/profile/address-info", authArtist, ProfileRouter.saveAddressInfo);
+router.get(
+  "/profile/get-specializations",
+  authArtist,
+  ProfileRouter.getSpecializations
+);
 
 module.exports = router;

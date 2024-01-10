@@ -1,4 +1,6 @@
+const { STATUS_ACTIVE } = require("../../config/constants");
 const User = require("../../models/User");
+const Specialization = require("../../models/specialization");
 
 /**
  *  Profile : Basic Info
@@ -54,6 +56,22 @@ exports.saveAddressInfo = async (req, res) => {
     }).then(() => {
       res.send({ error: false, message: "Address updated" });
     });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Profile : Get Specializations
+ * Type : GET
+ * Route : /profile/get-specializations
+ */
+exports.getSpecializations = async (req, res) => {
+  try {
+    const specializations = await Specialization.find({
+      status: STATUS_ACTIVE,
+    });
+    res.send({ error: true, data: specializations });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
