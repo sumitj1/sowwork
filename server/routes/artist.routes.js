@@ -37,5 +37,11 @@ router.get(
   authArtist,
   ProfileRouter.getSpecializations
 );
+router.post(
+  "/profile/kyc/upload-image",
+  UploadRouter.upload.single("image"),
+  UploadRouter.uploadSingleFile
+);
+router.post("/profile/kyc", authArtist, ProfileRouter.addKyc);
 
 module.exports = router;

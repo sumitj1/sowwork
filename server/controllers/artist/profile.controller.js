@@ -1,6 +1,7 @@
 const { STATUS_ACTIVE } = require("../../config/constants");
 const User = require("../../models/User");
 const Specialization = require("../../models/specialization");
+const Kyc = require("../../models/kyc");
 
 /**
  *  Profile : Basic Info
@@ -72,6 +73,45 @@ exports.getSpecializations = async (req, res) => {
       status: STATUS_ACTIVE,
     });
     res.send({ error: true, data: specializations });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Profile : Get Specializations
+ * Type : GET
+ * Route : /profile/get-specializations
+ */
+exports.addKyc = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const {
+      aadhar_number,
+      aadhar_photo_front,
+      aadhar_photo_back,
+      pan_number,
+      pan_photo_front,
+      pan_photo_back,
+      selfie,
+    } = req.body;
+
+    Kyc.create({
+      aadhar_number,
+      aadhar_photo_front,
+      aadhar_photo_back,
+      pan_number,
+      pan_photo_front,
+      pan_photo_back,
+      selfie,
+      user: _id,
+    }).then((data) => {
+      res.send({
+        error: false,
+        message: "Details updated successfully",
+        data: data,
+      });
+    });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
