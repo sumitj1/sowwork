@@ -2,7 +2,7 @@ const router = require("express").Router();
 const IndexRouter = require("../controllers/admin/index.contoller");
 const ReportRouter = require("../controllers/admin/report.controller");
 const { authAdmin } = require("../middleware/auth.middleware");
-
+const Specialization = require("../models/specialization");
 //general routes
 router.post("/signup", IndexRouter.signup);
 router.post("/login", IndexRouter.login);
@@ -20,4 +20,20 @@ router.get(
   authAdmin,
   ReportRouter.changePostStatus
 );
+
+router.post("/specializations", async (req, res) => {
+  console.log(req.body);
+
+  Specialization.create({
+    category_name: "music",
+    specializations: {
+      specialization_name: "singer",
+      sub_specializations: {
+        sub_specialization_name: "play back",
+      },
+    },
+  }).then(() => {
+    res.send({ error: false, message: "Added successfully" });
+  });
+});
 module.exports = router;

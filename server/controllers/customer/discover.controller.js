@@ -408,10 +408,7 @@ exports.bookmarkPost = async (req, res) => {
 exports.getBookmarks = async (req, res) => {
   try {
     const user_id = req.user._id;
-    console.log(
-      "🚀 ~ file: discover.controller.js:410 ~ exports.getBookmarks= ~ user_id:",
-      user_id
-    );
+
     let data = [];
     let bookmarks = await Bookmark.aggregate([
       {
@@ -454,11 +451,6 @@ exports.getBookmarks = async (req, res) => {
                 preserveNullAndEmptyArrays: true,
               },
             },
-            // {
-            //   $match: {
-            //     "comments.status": STATUS_ACTIVE,
-            //   },
-            // },
             {
               $lookup: {
                 from: "users",
@@ -544,32 +536,6 @@ exports.getBookmarks = async (req, res) => {
       bookmark = bookmark.post;
       bookmark.bookmarkId = bookmarkId;
       let reactions = [];
-      // finding userId
-      // if (bookmark?.reactions?.love?.includes(user_id)) {
-      //   bookmark.selectedReaction = "love";
-      // } else if (bookmark?.reactions?.happy?.includes(user_id)) {
-      //   bookmark.selectedReaction = "happy";
-      // } else if (bookmark?.reactions?.surprise?.includes(user_id)) {
-      //   bookmark.selectedReaction = "surprise";
-      // } else if (bookmark?.reactions?.laugh?.includes(user_id)) {
-      //   bookmark.selectedReaction = "laugh";
-      // } else {
-      //   bookmark.selectedReaction = null;
-      // }
-
-      //setting count by rections length and formatting
-      // bookmark.reactions.love = bookmark?.reactions?.love?.length
-      //   ? formatNumber(bookmark?.reactions?.love?.length)
-      //   : formatNumber(1500);
-      // bookmark.reactions.happy = bookmark?.reactions?.happy?.length
-      //   ? formatNumber(bookmark?.reactions?.happy?.length)
-      //   : formatNumber(2300);
-      // bookmark.reactions.surprise = bookmark?.reactions?.surprise?.length
-      //   ? formatNumber(bookmark?.reactions?.surprise?.length)
-      //   : formatNumber(100);
-      // bookmark.reactions.laugh = bookmark?.reactions?.laugh?.length
-      //   ? formatNumber(bookmark?.reactions?.laugh?.length)
-      //   : formatNumber(4043);
 
       let reaction = ["love", "surprise", "laugh", "happy"];
       // Looping through the object using the keys and accessing the index

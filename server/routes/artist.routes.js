@@ -20,11 +20,19 @@ router.post(
 router.post("/posts", DiscoverRouter.addPost);
 
 //discover routes
-router.get("/discover/post/get-all", DiscoverRouter.getAllPosts);
+router.get("/discover/post/get-all", authArtist, DiscoverRouter.getAllPosts);
 
 //Bookmark routes
-router.get("/discover/post/bookmark/:_id", DiscoverRouter.bookmarkPost);
-router.get("/discover/post/get-bookmarks", DiscoverRouter.getBookmarks);
+router.get(
+  "/discover/post/bookmark/:_id",
+  authArtist,
+  DiscoverRouter.bookmarkPost
+);
+router.get(
+  "/discover/post/get-bookmarks",
+  authArtist,
+  DiscoverRouter.getBookmarks
+);
 
 //notifications
 router.post("/notification", NotificationRouter.addNotification);
