@@ -46,10 +46,21 @@ router.get(
   ProfileRouter.getSpecializations
 );
 router.post(
+  "/profile/set-specialization",
+  authArtist,
+  ProfileRouter.setSpecialization
+);
+router.post(
   "/profile/kyc/upload-image",
   UploadRouter.upload.single("image"),
   UploadRouter.uploadSingleFile
 );
 router.post("/profile/kyc", authArtist, ProfileRouter.addKyc);
+
+router.get(
+  "/profile/get-artist-by-id/:_id",
+  authArtist,
+  ProfileRouter.getArtistById
+);
 
 module.exports = router;

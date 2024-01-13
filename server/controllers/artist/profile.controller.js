@@ -2,7 +2,8 @@ const { STATUS_ACTIVE } = require("../../config/constants");
 const User = require("../../models/User");
 const Specialization = require("../../models/specialization");
 const Kyc = require("../../models/kyc");
-
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 /**
  *  Profile : Basic Info
  * Type : POST
@@ -112,6 +113,61 @@ exports.addKyc = async (req, res) => {
         data: data,
       });
     });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Profile : Set Specializations
+ * Type : POST
+ * Route : /profile/set-specialization
+ */
+exports.setSpecialization = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    console.log("🚀 ~ exports.setSpecialization= ~ _id:", _id);
+    const { category_id, specialization_id, sub_specialization_id } = req.body;
+    console.log(
+      "🚀 ~ exports.setSpecialization= ~ category_id, specialization_id, sub_specialization_id :",
+      category_id,
+      specialization_id,
+      sub_specialization_id
+    );
+
+    User.findByIdAndUpdate(_id, {
+      $set: {
+        specializations: {
+          category: category_id,
+          specialization: specialization_id,
+          sub_specialization: sub_specialization_id,
+        },
+      },
+    }).then(() => {
+      res.send({ error: false, message: "Specialization added" });
+    });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Profile : Get artist Details By Id
+ * Type : GET
+ * ROute  : /profile/get-artist-by-id/:_id
+ */
+exports.getArtistById = async (req, res) => {
+  try {
+    const userId = req.params._id;
+
+    let user = await User.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(userId),
+        },
+      },
+    ]);
+    res.send({ error: false, data: user[0] });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
