@@ -21,6 +21,7 @@ router.post("/posts", DiscoverRouter.addPost);
 
 //discover routes
 router.get("/discover/post/get-all", authArtist, DiscoverRouter.getAllPosts);
+router.post("/discover/post/react", authArtist, DiscoverRouter.reactOnPost);
 
 //Bookmark routes
 router.get(

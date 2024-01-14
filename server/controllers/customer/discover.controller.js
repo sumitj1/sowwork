@@ -296,35 +296,6 @@ exports.addCommentOnPost = async (req, res) => {
 };
 
 /**
- * Add Comment On Post
- * Type : POST
- * Route : /customer/discover/post/add-comment
- */
-exports.addReactionOnPost = async (req, res) => {
-  try {
-    const { _id, reaction } = req.body;
-    const user_id = req.user._id;
-
-    // await Post.findByIdAndUpdate(
-    //   {
-    //     _id: _id,
-    //   },
-    //   {
-    //     $push: {
-    //       comments: {
-    //         comment,
-    //         user: user_id,
-    //       },
-    //     },
-    //   }
-    // );
-    res.send({ error: false, message: "Comment Added" });
-  } catch (error) {
-    res.send({ error: true, message: error.message });
-  }
-};
-
-/**
  * Report Post
  * Type : POST
  * Route : /customer/discover/post/report

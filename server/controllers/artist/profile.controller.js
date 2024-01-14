@@ -166,8 +166,41 @@ exports.getArtistById = async (req, res) => {
           _id: new ObjectId(userId),
         },
       },
+      {
+        $lookup: {
+          from: "specializations",
+          localField: "specializations.category",
+          foreignField: "_id",
+          as: "specialization",
+        },
+      },
+      {
+        $unwind: "$specialization",
+      },
     ]);
-    res.send({ error: false, data: user[0] });
+    if (user.length <= 0) throw new Error("Unable to get user details.");
+
+    user = user[0];
+
+    if (user.specialization) {
+      user.specializations.category = user.specialization.category_name;
+      user.specialization?.specializations.forEach((elem) => {
+        if (String(elem._id) == String(user.specializations.specialization)) {
+          user.specializations.specialization = elem.specialization_name;
+          elem.sub_specializations.forEach((sub) => {
+            if (
+              String(sub._id) == String(user.specializations.sub_specialization)
+            ) {
+              user.specializations.sub_specialization =
+                sub.sub_specialization_name;
+            }
+          });
+        }
+      });
+
+      delete user.specialization;
+    }
+    res.send({ error: false, data: user });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
