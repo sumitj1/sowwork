@@ -61,26 +61,26 @@ exports.getAllPosts = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
-      {
-        $unwind: {
-          path: "$comments",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "comments.user",
-          foreignField: "_id",
-          as: "comments.user",
-        },
-      },
-      {
-        $unwind: {
-          path: "$comments.user",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
+      // {
+      //   $unwind: {
+      //     path: "$comments",
+      //     preserveNullAndEmptyArrays: true,
+      //   },
+      // },
+      // {
+      //   $lookup: {
+      //     from: "users",
+      //     localField: "comments.user",
+      //     foreignField: "_id",
+      //     as: "comments.user",
+      //   },
+      // },
+      // {
+      //   $unwind: {
+      //     path: "$comments.user",
+      //     preserveNullAndEmptyArrays: true,
+      //   },
+      // },
       {
         $project: {
           _id: 1,
@@ -98,31 +98,31 @@ exports.getAllPosts = async (req, res) => {
           },
           is_deleted: 1,
           created_at: 1,
-          "comments._id": 1,
-          "comments.comment": 1,
-          "comments._is_deleted": 1,
-          "comments.created_at": 1,
-          "comments.user": {
-            first_name: 1,
-            last_name: 1,
-            _id: 1,
-          },
+          // "comments._id": 1,
+          // "comments.comment": 1,
+          // "comments._is_deleted": 1,
+          // "comments.created_at": 1,
+          // "comments.user": {
+          //   first_name: 1,
+          //   last_name: 1,
+          //   _id: 1,
+          // },
         },
       },
-      {
-        $group: {
-          _id: "$_id",
-          category: { $first: "$category" },
-          image: { $first: "$image" },
-          status: { $first: "$status" },
-          reactions: { $first: "$reactions" },
-          caption: { $first: "$caption" },
-          user: { $first: "$user" },
-          is_deleted: { $first: "$is_deleted" },
-          created_at: { $first: "$created_at" },
-          comments: { $push: "$comments" },
-        },
-      },
+      // {
+      //   $group: {
+      //     _id: "$_id",
+      //     category: { $first: "$category" },
+      //     image: { $first: "$image" },
+      //     status: { $first: "$status" },
+      //     reactions: { $first: "$reactions" },
+      //     caption: { $first: "$caption" },
+      //     user: { $first: "$user" },
+      //     is_deleted: { $first: "$is_deleted" },
+      //     created_at: { $first: "$created_at" },
+      //     comments: { $push: "$comments" },
+      //   },
+      // },
       {
         $lookup: {
           from: "bookmarks",
@@ -166,11 +166,32 @@ exports.getAllPosts = async (req, res) => {
           user: 1,
           is_deleted: 1,
           created_at: 1,
-          comments: 1,
+          // comments: 1,
           isBookmarked: 1,
         },
       },
     ]);
+
+    for (let post of posts) {
+      let reactions = [];
+
+      let reaction = ["love", "surprise", "laugh", "happy"];
+      //Looping through the object using the keys and accessing the index
+      for (let i = 0; i < reaction.length; i++) {
+        reactions.push({
+          id: i,
+          img: i + 6,
+          isclick: post?.reactions[reaction[i]]?.includes(userId),
+          count: post?.reactions[reaction[i]]?.length,
+          name: reaction[i],
+        });
+      }
+
+      //formatting time
+      post.post_time = getTimeDifferenceText(post.created_at);
+      post.reaction = reactions;
+      delete post.reactions;
+    }
 
     res.send({ error: false, data: posts });
   } catch (error) {
