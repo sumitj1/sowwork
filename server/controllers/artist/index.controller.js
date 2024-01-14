@@ -45,7 +45,7 @@ exports.loginStep1 = async (req, res) => {
         },
       })
         .then(() => {
-          return res.send({ error: false, code });
+          return res.send({ error: false, code, isNewUser: true });
         })
         .catch((error) => {
           throw new Error(error.message);
@@ -66,7 +66,7 @@ exports.loginStep1 = async (req, res) => {
         },
       })
         .then(() => {
-          return res.send({ error: false, code });
+          return res.send({ error: false, code, isNewUser: false });
         })
         .catch((error) => {
           throw new Error(error.message);
