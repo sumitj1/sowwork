@@ -1,4 +1,4 @@
-<div class="sideNavContainer">
+<!-- <div class="sideNavContainer">
   <div class="navHeader text-center">
     <img src="../../../../../assets/images/side-nav-logo.svg" alt="logo" />
   </div>
@@ -59,4 +59,112 @@
   <div class="buttonContainer">
     <button class="sectionButton selected" (click)="logout()">Logout ></button>
   </div>
-</div>
+</div> -->
+<nav
+  class="navbar navbar-vertical navbar-expand-md navbar-dark bg-red pb-md-0"
+  id="sidenav-main"
+>
+  <div class="container-fluid">
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="isCollapsed = !isCollapsed"
+      aria-controls="sidenav-collapse-main"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <span class="navbar-brand py-0 pb-md-3">
+      <img
+        class="navbar-brand-img"
+        src="../../../../../assets/images/side-nav-logo.svg"
+        alt="logo"
+      />
+    </span>
+    <div
+      class="collapse navbar-collapse bg-white pb-0 pt-2"
+      id="sidenav-collapse-main"
+      [ngbCollapse]="isCollapsed"
+    >
+      <div class="navbar-collapse-header d-md-none pb-2">
+        <div class="row align-items-center">
+          <div class="col-6 collapse-brand">
+            <img src="../../../../../assets/images/logo-pink.svg" />
+          </div>
+          <div class="col-6 collapse-close">
+            <button
+              type="button"
+              class="navbar-toggler"
+              (click)="isCollapsed = !isCollapsed"
+            >
+              <img
+                src="../../../../../assets/images/close.svg"
+                style="transform: none !important"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+        IMPORTANT
+      </h6>
+      <ul class="navbar-nav mb-md-1">
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Overview</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Reports</a>
+        </li>
+      </ul>
+      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+        USERS
+      </h6>
+      <ul class="navbar-nav mb-md-1">
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Customers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Artists</a>
+        </li>
+      </ul>
+      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+        WORK
+      </h6>
+      <ul class="navbar-nav mb-md-1">
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Roles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Filters</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Transcations</a>
+        </li>
+      </ul>
+      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+        SOCIAL MEDIA
+      </h6>
+      <ul class="navbar-nav mb-md-1">
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Roles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Tags</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ml-3 py-2 text-dark">Ads</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav mb-md-3 mb-4">
+        <li class="nav-item">
+          <button class="btn btn-dark ml-3">LOGOUT</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

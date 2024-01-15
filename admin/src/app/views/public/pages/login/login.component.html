@@ -1,5 +1,5 @@
 <div class="public-wrapper">
-  <div class="loginBase">
+  <!-- <div class="loginBase">
     <div class="loginContainer">
       <div class="logoContiner">
         <img src="../../../../../assets/images/logo.svg" alt="" />
@@ -58,6 +58,101 @@
           </button>
         </div>
       </form>
+    </div>
+  </div> -->
+  <div class="container pb-5" style="margin-top: 15vh">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card bg-white shadow border-0">
+          <div class="card-body px-lg-5 py-lg-5">
+            <div class="text-center text-muted mb-4">
+              <img
+                src="../../../../../assets/images/logo.svg"
+                alt=""
+                class="mt-5"
+              />
+              <h2 class="text-dark mt-4"><b>ADMIN PANEL</b></h2>
+            </div>
+            <form
+              class="formContainer"
+              [formGroup]="loginForm"
+              (ngSubmit)="onSubmit()"
+            >
+              <div class="form-group">
+                <div class="input-group">
+                  <input
+                    class="form-control textField"
+                    placeholder="Email Address"
+                    type="email"
+                    formControlName="email"
+                    [ngClass]="{
+                      'is-invalid':
+                        (submitted || form.email.touched) && form.email.errors
+                    }"
+                    style="border-radius: 0.375rem !important"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      (submitted || form.email.touched) && form.email.errors
+                    "
+                  >
+                    <div *ngIf="form.email.errors['required']">
+                      Email is required.
+                    </div>
+                    <div *ngIf="form.email.errors['pattern']">
+                      Email is inavlid.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <div class="input-group position-relative" id="passwordDiv">
+                  <input
+                    placeholder="Password"
+                    formControlName="password"
+                    [ngClass]="{
+                      'is-invalid':
+                        (submitted || form.password.touched) &&
+                        form.password.errors
+                    }"
+                    class="form-control textField"
+                    style="border-radius: 0.375rem !important"
+                    [type]="hidePassword ? 'password' : 'text'"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      (submitted || form.password.touched) &&
+                      form.password.errors
+                    "
+                  >
+                    <div *ngIf="form.password.errors['required']">
+                      Password is required.
+                    </div>
+                  </div>
+                  <button
+                    (click)="togglePasswordType()"
+                    class="btn position-absolute"
+                    style="right: 20px; z-index: 1000"
+                  >
+                    <img src="../../../../../assets/images/eye.svg" />
+                  </button>
+                </div>
+              </div>
+              <div class="text-center">
+                <button
+                  class="btn btn-dark my-4 col-6 col-md-4 py-2"
+                  type="submit"
+                  [disabled]="!loginForm.valid"
+                >
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

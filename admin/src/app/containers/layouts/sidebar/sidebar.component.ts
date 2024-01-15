@@ -8,8 +8,13 @@ import Swal from 'sweetalert2';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  public isCollapsed = true;
   constructor(public api: ApiService) {}
+
+  ngOnInit() {
+    this.isCollapsed = true;
+  }
 
   logout = () => {
     Swal.fire({

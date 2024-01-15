@@ -17,6 +17,7 @@ import { PostsComponent } from './views/pages/reports/posts/posts.component';
 import { CommentsComponent } from './views/pages/reports/comments/comments.component';
 import { NgChartsModule } from 'ng2-charts';
 import { CustomerComponent } from './views/pages/customer/customer.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { CustomerComponent } from './views/pages/customer/customer.component';
       positionClass: 'toast-top-center',
     }),
     NgChartsModule,
+    NgbModule,
   ],
   providers: [
     {
