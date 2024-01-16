@@ -3,6 +3,7 @@ const UploadRouter = require("../controllers/upload.controller");
 const NotificationRouter = require("../controllers/artist/notification.controller");
 const IndexRouter = require("../controllers/artist/index.controller");
 const ProfileRouter = require("../controllers/artist/profile.controller");
+const DashboardRouter = require("../controllers/artist/dashboard.controller");
 const { authArtist } = require("../middleware/auth.middleware");
 
 const router = require("express").Router();
@@ -17,7 +18,12 @@ router.post(
   UploadRouter.upload.single("image"),
   UploadRouter.uploadSingleFile
 );
-router.post("/posts", DiscoverRouter.addPost);
+router.post(
+  "/posts",
+  authArtist,
+  UploadRouter.upload.single("image"),
+  DiscoverRouter.addPost
+);
 
 //discover routes
 router.get("/discover/post/get-all", authArtist, DiscoverRouter.getAllPosts);
@@ -62,6 +68,22 @@ router.get(
   "/profile/get-artist-by-id/:_id",
   authArtist,
   ProfileRouter.getArtistById
+);
+router.post("/profile/address", authArtist, ProfileRouter.addAddress);
+router.get("/profile/address", authArtist, ProfileRouter.getAddress);
+router.get("/profile/address/:_id", authArtist, ProfileRouter.getAddressById);
+router.post("/profile/address/update", authArtist, ProfileRouter.updateAddress);
+router.get(
+  "/profile/address/delete/:_id",
+  authArtist,
+  ProfileRouter.deleteAddress
+);
+
+//dashboard routes
+router.get(
+  "/dashboard/get-my-profile",
+  authArtist,
+  DashboardRouter.getMyProfile
 );
 
 module.exports = router;

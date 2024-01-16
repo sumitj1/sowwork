@@ -1,8 +1,9 @@
-const { STATUS_ACTIVE } = require("../../config/constants");
+const { STATUS_ACTIVE, STATUS_DELETED } = require("../../config/constants");
 const User = require("../../models/User");
 const Specialization = require("../../models/specialization");
 const Kyc = require("../../models/kyc");
 const mongoose = require("mongoose");
+const Address = require("../../models/Address");
 const { ObjectId } = mongoose.Types;
 /**
  *  Profile : Basic Info
@@ -201,6 +202,118 @@ exports.getArtistById = async (req, res) => {
       delete user.specialization;
     }
     res.send({ error: false, data: user });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Profile : Add Address
+ * Type : POST
+ * ROute  : /profile/address
+ */
+exports.addAddress = async (req, res) => {
+  try {
+    const { coordinates, address, building_number, name } = req.body;
+    const { _id } = req.user;
+
+    Address.create({
+      coordinates,
+      address,
+      building_number,
+      name,
+      user: _id,
+      status: STATUS_ACTIVE,
+    }).then((data) => {
+      res.send({ error: false, message: "Address saved", data: data });
+    });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Get Address
+ * TYPE : GET
+ * Route : /artist/profile/address
+ */
+exports.getAddress = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    const address = await Address.find({
+      status: STATUS_ACTIVE,
+      user: _id,
+    }).sort("created_at : -1");
+
+    res.send({ error: false, data: address });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Get Address By ID
+ * TYPE : GET
+ * Route : /artist/profile/address/:id  :: Address Id
+ */
+exports.getAddressById = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const address = await Address.findById(_id);
+
+    res.send({ error: false, data: address });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Update Address
+ * TYPE : POST
+ * Route : /artist/profile/address/update
+ */
+exports.updateAddress = async (req, res) => {
+  try {
+    const { coordinates, address, building_number, name, _id } = req.body;
+
+    const updatedAddress = await Address.findByIdAndUpdate(_id, {
+      $set: {
+        coordinates,
+        address,
+        building_number,
+        name,
+      },
+    });
+
+    if (!updatedAddress) throw new Error("Address not found.");
+    res.send({ error: false, message: "Address updated successfully." });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Delete Address
+ * TYPE : GET
+ * Route : /profile/address/delete/:id
+ */
+exports.deleteAddress = async (req, res) => {
+  try {
+    const { _id } = req.params;
+
+    let obj = {
+      status: STATUS_DELETED,
+      is_deleted: true,
+      deleted_at: new Date().toISOString(),
+    };
+
+    const updatedAddressStatus = await Address.findByIdAndUpdate(_id, {
+      $set: obj,
+    });
+
+    if (!updatedAddressStatus) throw new Error("Address not found.");
+    res.send({ error: false, message: `Address deleted successfully.` });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }

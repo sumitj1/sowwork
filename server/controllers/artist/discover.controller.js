@@ -11,20 +11,20 @@ const { ObjectId } = mongoose.Types;
  */
 exports.addPost = async (req, res) => {
   try {
-    const { image, category, id, caption } = req.body;
-    const userId = req?.user?._id || id;
+    const { caption, post_on_portfolio, post_on_feed } = req.body;
+    const userId = req.user._id;
+    if (!req.file) throw new Error("Image not found.");
+    const image = req.file.filename;
 
-    let newTempUser = new Post({
+    await Post.create({
       image,
-      category,
-      status: STATUS_ACTIVE,
+      post_on_portfolio,
+      post_on_feed,
       user: userId,
       caption,
+    }).then((post) => {
+      res.send({ error: false, message: "Post added.", data: post });
     });
-
-    await newTempUser.save();
-
-    res.send({ error: false, message: "Post added." });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
