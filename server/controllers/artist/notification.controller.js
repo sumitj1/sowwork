@@ -1,3 +1,4 @@
+const { STATUS_ACTIVE } = require("../../config/constants");
 const Notification = require("../../models/Notifications");
 
 exports.addNotification = async (req, res) => {
@@ -14,6 +15,26 @@ exports.addNotification = async (req, res) => {
     await newNotification.save();
 
     res.send({ error: false, message: "Notification added." });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Get All Notifications
+ * TYPE : GET
+ * Route : /artist/notification
+ */
+exports.getAllNotifications = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    const notifications = await Notification.find({
+      status: STATUS_ACTIVE,
+      user: _id,
+    }).sort("created_at : -1");
+
+    res.send({ error: false, data: notifications });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }

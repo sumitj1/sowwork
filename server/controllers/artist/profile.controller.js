@@ -318,3 +318,72 @@ exports.deleteAddress = async (req, res) => {
     res.send({ error: true, message: error.message });
   }
 };
+
+/**
+ * Get data to fill in Edit profile
+ * TYPE : GET
+ * Route : /profile/edit-profile
+ */
+exports.editProfile = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    let user = await User.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(_id),
+        },
+      },
+      {
+        $lookup: {
+          from: "specializations",
+          localField: "specializations.category",
+          foreignField: "_id",
+          as: "specialization",
+        },
+      },
+      {
+        $unwind: "$specialization",
+      },
+      {
+        $project: {
+          _id: 1,
+          profile_image: 1,
+          first_name: 1,
+          last_name: 1,
+          phone_number: 1,
+          email: 1,
+          address: 1,
+          specialization: 1,
+          specializations: 1,
+          category: 1,
+        },
+      },
+    ]);
+    if (user.length <= 0) throw new Error("Unable to get user details.");
+
+    user = user[0];
+
+    if (user.specialization) {
+      user.specializations.category = user.specialization.category_name;
+      user.specialization?.specializations.forEach((elem) => {
+        if (String(elem._id) == String(user.specializations.specialization)) {
+          user.specializations.specialization = elem.specialization_name;
+          elem.sub_specializations.forEach((sub) => {
+            if (
+              String(sub._id) == String(user.specializations.sub_specialization)
+            ) {
+              user.specializations.sub_specialization =
+                sub.sub_specialization_name;
+            }
+          });
+        }
+      });
+
+      delete user.specialization;
+    }
+    res.send({ error: false, data: user });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};

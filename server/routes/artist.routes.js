@@ -43,7 +43,7 @@ router.get(
 
 //notifications
 router.post("/notification", NotificationRouter.addNotification);
-
+router.get("/notification", authArtist, NotificationRouter.getAllNotifications);
 //profile routes
 router.post("/profile/basic-info", authArtist, ProfileRouter.saveBasicInfo);
 router.post("/profile/address-info", authArtist, ProfileRouter.saveAddressInfo);
@@ -78,6 +78,7 @@ router.get(
   authArtist,
   ProfileRouter.deleteAddress
 );
+router.get("/profile/edit-profile", authArtist, ProfileRouter.editProfile);
 
 //dashboard routes
 router.get(
