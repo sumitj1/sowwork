@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
       state: { type: String },
     },
     profile_image: { type: String, default: "avatar.png" },
+    cover_image: { type: String, default: "avatar.png" },
     user_role: {
       type: String,
       required: true,

@@ -79,6 +79,19 @@ router.get(
   ProfileRouter.deleteAddress
 );
 router.get("/profile/edit-profile", authArtist, ProfileRouter.editProfile);
+router.post(
+  "/profile/upload-profile-pic",
+  authArtist,
+  UploadRouter.upload.single("image"),
+  UploadRouter.uploadSingleFile
+);
+router.post(
+  "/profile/upload-cover-pic",
+  authArtist,
+  UploadRouter.upload.single("image"),
+  UploadRouter.uploadSingleFile
+);
+router.post("/profile/update-profile", authArtist, ProfileRouter.updateProfile);
 
 //dashboard routes
 router.get(

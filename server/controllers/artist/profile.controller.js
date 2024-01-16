@@ -129,12 +129,6 @@ exports.setSpecialization = async (req, res) => {
     const { _id } = req.user;
     console.log("🚀 ~ exports.setSpecialization= ~ _id:", _id);
     const { category_id, specialization_id, sub_specialization_id } = req.body;
-    console.log(
-      "🚀 ~ exports.setSpecialization= ~ category_id, specialization_id, sub_specialization_id :",
-      category_id,
-      specialization_id,
-      sub_specialization_id
-    );
 
     User.findByIdAndUpdate(_id, {
       $set: {
@@ -383,6 +377,85 @@ exports.editProfile = async (req, res) => {
       delete user.specialization;
     }
     res.send({ error: false, data: user });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Update profile Data
+ * TYPE : POST
+ * Route : /profile/update-profile
+ */
+exports.updateProfile = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const {
+      first_name,
+      last_name,
+      phone_number,
+      profile_image,
+      cover_image,
+      address_line_1,
+      address_line_2,
+      landmark,
+      pincode,
+      city,
+      state,
+      email,
+      category,
+      specialization,
+      sub_specialization,
+    } = req.body;
+
+    let specializationDetails = await Specialization.findOne({
+      category_name: category,
+    });
+    console.log(
+      "🚀 ~ exports.updateProfile= ~ specializationDetails:",
+      specializationDetails
+    );
+
+    if (!specializationDetails) throw new Error("Specialization not found.");
+    let specializationObj = {
+      category: specializationDetails._id,
+    };
+    specializationDetails.specializations.forEach((elem) => {
+      if (elem.specialization_name == specialization) {
+        specializationObj.specialization = elem._id;
+        elem.sub_specializations.forEach((elem2) => {
+          if (elem2.sub_specialization_name == sub_specialization) {
+            specializationObj.sub_specialization = elem2._id;
+          }
+        });
+      }
+    });
+
+    console.log(
+      "🚀 ~ elem.sub_specializations.forEach ~ specializationObj:",
+      specializationObj
+    );
+    User.findByIdAndUpdate(_id, {
+      $set: {
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        address: {
+          address_line_1,
+          address_line_2,
+          landmark,
+          pincode,
+          city,
+          state,
+        },
+        profile_image,
+        cover_image,
+        specializations: specializationObj,
+      },
+    }).then((data) => {
+      res.send({ error: false, message: "Profile updated.", data });
+    });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
