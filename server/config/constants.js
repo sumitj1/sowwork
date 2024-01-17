@@ -18,4 +18,8 @@ module.exports = {
   REPORT_TYPE_USER: process.env.REPORT_TYPE_USER,
   REPORT_TYPE_POST: process.env.REPORT_TYPE_POST,
   REPORT_TYPE_COMMENT: process.env.REPORT_TYPE_COMMENT,
+  PACKAGE_TYPE_BASIC: "basic",
+  PACKAGE_TYPE_STANDARD: "standard",
+  PACKAGE_TYPE_PREMIUM: "premium",
+  PACKAGE_TYPE_CUSTOM: "custom",
 };

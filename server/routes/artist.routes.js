@@ -93,6 +93,14 @@ router.post(
 );
 router.post("/profile/update-profile", authArtist, ProfileRouter.updateProfile);
 
+//packages
+router.post("/profile/package", authArtist, ProfileRouter.addUpdatePackage);
+router.get(
+  "/profile/package/get-by-type/:type",
+  authArtist,
+  ProfileRouter.getPackageByType
+);
+
 //dashboard routes
 router.get(
   "/dashboard/get-my-profile",

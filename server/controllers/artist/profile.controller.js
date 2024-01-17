@@ -1,9 +1,17 @@
-const { STATUS_ACTIVE, STATUS_DELETED } = require("../../config/constants");
+const {
+  STATUS_ACTIVE,
+  STATUS_DELETED,
+  PACKAGE_TYPE_BASIC,
+  PACKAGE_TYPE_STANDARD,
+  PACKAGE_TYPE_PREMIUM,
+} = require("../../config/constants");
 const User = require("../../models/User");
 const Specialization = require("../../models/specialization");
 const Kyc = require("../../models/kyc");
 const mongoose = require("mongoose");
 const Address = require("../../models/Address");
+const { getSpecializations } = require("../common.controller");
+const Package = require("../../models/Package");
 const { ObjectId } = mongoose.Types;
 /**
  *  Profile : Basic Info
@@ -71,10 +79,11 @@ exports.saveAddressInfo = async (req, res) => {
  */
 exports.getSpecializations = async (req, res) => {
   try {
-    const specializations = await Specialization.find({
-      status: STATUS_ACTIVE,
-    });
-    res.send({ error: true, data: specializations });
+    const specializations = await getSpecializations();
+    if (specializations && !specializations.error)
+      console.log(specializations.message);
+
+    res.send({ error: true, data: specializations || [] });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
@@ -376,7 +385,15 @@ exports.editProfile = async (req, res) => {
 
       delete user.specialization;
     }
-    res.send({ error: false, data: user });
+
+    let specializations = await getSpecializations();
+    if (specializations && !specializations.error)
+      console.log(specializations.message);
+    res.send({
+      error: false,
+      data: user,
+      specializations: specializations.data || [],
+    });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
@@ -411,30 +428,23 @@ exports.updateProfile = async (req, res) => {
     let specializationDetails = await Specialization.findOne({
       category_name: category,
     });
-    console.log(
-      "🚀 ~ exports.updateProfile= ~ specializationDetails:",
-      specializationDetails
-    );
 
     if (!specializationDetails) throw new Error("Specialization not found.");
     let specializationObj = {
       category: specializationDetails._id,
     };
-    specializationDetails.specializations.forEach((elem) => {
+
+    for (let elem of specializationDetails.specializations) {
       if (elem.specialization_name == specialization) {
         specializationObj.specialization = elem._id;
-        elem.sub_specializations.forEach((elem2) => {
+        for (let elem2 of elem.sub_specializations) {
           if (elem2.sub_specialization_name == sub_specialization) {
             specializationObj.sub_specialization = elem2._id;
           }
-        });
+        }
       }
-    });
+    }
 
-    console.log(
-      "🚀 ~ elem.sub_specializations.forEach ~ specializationObj:",
-      specializationObj
-    );
     User.findByIdAndUpdate(_id, {
       $set: {
         first_name,
@@ -456,6 +466,76 @@ exports.updateProfile = async (req, res) => {
     }).then((data) => {
       res.send({ error: false, message: "Profile updated.", data });
     });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/********  Packages ********/
+
+/**
+ * Add Package
+ * Type : POST
+ * Route : /profile/package
+ */
+exports.addUpdatePackage = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { price, details, type } = req.body;
+
+    if (
+      type !== PACKAGE_TYPE_BASIC &&
+      type !== PACKAGE_TYPE_STANDARD &&
+      type !== PACKAGE_TYPE_PREMIUM
+    )
+      throw new Error("Invalid Package type");
+
+    await Package.findOneAndUpdate(
+      {
+        artist: _id,
+        type: type,
+      },
+      {
+        $set: {
+          price,
+          details,
+          artist: _id,
+          type,
+        },
+      },
+      {
+        upsert: true,
+      }
+    ).then(() => {
+      res.send({ error: false, message: "Package updated successfully" });
+    });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Get Package By Type
+ * Type : GET
+ * Route : /profile/package/get-by-type/:type
+ */
+exports.getPackageByType = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { type } = req.params;
+
+    if (
+      type !== PACKAGE_TYPE_BASIC &&
+      type !== PACKAGE_TYPE_STANDARD &&
+      type !== PACKAGE_TYPE_PREMIUM
+    )
+      throw new Error("Invalid Package type");
+
+    const package = await Package.findOne({
+      artist: _id,
+      type,
+    }).select("type created_at details price status");
+    res.send({ error: false, data: package });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }
