@@ -12,6 +12,9 @@ const mongoose = require("mongoose");
 const Address = require("../../models/Address");
 const { getSpecializations } = require("../common.controller");
 const Package = require("../../models/Package");
+const Post = require("../../models/Post");
+const { getTimeDifferenceText } = require("../../utils/common.functions");
+const Review = require("../../models/Review");
 const { ObjectId } = mongoose.Types;
 /**
  *  Profile : Basic Info
@@ -536,6 +539,199 @@ exports.getPackageByType = async (req, res) => {
       type,
     }).select("type created_at details price status");
     res.send({ error: false, data: package });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/**
+ * Get all portfolio posts
+ * TYPE : Get
+ * Route : /profile/portfolio/get-all
+ */
+exports.getAllPortfolio = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          $and: [
+            { status: STATUS_ACTIVE },
+            { user: { $ne: new ObjectId(userId) } },
+            { post_on_portfolio: true },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      // {
+      //   $unwind: {
+      //     path: "$comments",
+      //     preserveNullAndEmptyArrays: true,
+      //   },
+      // },
+      // {
+      //   $lookup: {
+      //     from: "users",
+      //     localField: "comments.user",
+      //     foreignField: "_id",
+      //     as: "comments.user",
+      //   },
+      // },
+      // {
+      //   $unwind: {
+      //     path: "$comments.user",
+      //     preserveNullAndEmptyArrays: true,
+      //   },
+      // },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          image: 1,
+          status: 1,
+          reactions: 1,
+          caption: 1,
+          user: {
+            first_name: 1,
+            last_name: 1,
+            _id: 1,
+            profile_image: 1,
+            address: 1,
+          },
+          is_deleted: 1,
+          created_at: 1,
+          // "comments._id": 1,
+          // "comments.comment": 1,
+          // "comments._is_deleted": 1,
+          // "comments.created_at": 1,
+          // "comments.user": {
+          //   first_name: 1,
+          //   last_name: 1,
+          //   _id: 1,
+          // },
+        },
+      },
+      // {
+      //   $group: {
+      //     _id: "$_id",
+      //     category: { $first: "$category" },
+      //     image: { $first: "$image" },
+      //     status: { $first: "$status" },
+      //     reactions: { $first: "$reactions" },
+      //     caption: { $first: "$caption" },
+      //     user: { $first: "$user" },
+      //     is_deleted: { $first: "$is_deleted" },
+      //     created_at: { $first: "$created_at" },
+      //     comments: { $push: "$comments" },
+      //   },
+      // },
+      {
+        $lookup: {
+          from: "bookmarks",
+          let: { postId: "$_id" }, // Variable to store the post ID from posts collection
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$post", "$$postId"] }, // Match bookmark's postId with post's _id
+                    { $eq: ["$user", new ObjectId(userId)] }, // Match bookmark's userId with current user's ID
+                    { $eq: ["$status", STATUS_ACTIVE] },
+                    { $eq: ["$is_deleted", false] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "bookmarks", // Store matched bookmarks in an array field called "bookmarks"
+        },
+      },
+      {
+        $addFields: {
+          isBookmarked: {
+            $cond: {
+              if: { $eq: [{ $size: "$bookmarks" }, 0] }, // Check if bookmarks array is empty
+              then: false, // No bookmarks found for this post and user
+              else: true, // Bookmarks found for this post and user
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          category: 1,
+          image: 1,
+          status: 1,
+          reactions: 1,
+          caption: 1,
+          user: 1,
+          is_deleted: 1,
+          created_at: 1,
+          // comments: 1,
+          isBookmarked: 1,
+        },
+      },
+    ]);
+
+    for (let post of posts) {
+      let reactions = [];
+
+      let reaction = ["love", "surprise", "laugh", "happy"];
+      //Looping through the object using the keys and accessing the index
+      for (let i = 0; i < reaction.length; i++) {
+        reactions.push({
+          id: i,
+          img: i + 6,
+          isclick: post?.reactions[reaction[i]]?.includes(userId),
+          count: post?.reactions[reaction[i]]?.length,
+          name: reaction[i],
+        });
+      }
+
+      //formatting time
+      post.post_time = getTimeDifferenceText(post.created_at);
+      post.reaction = reactions;
+      delete post.reactions;
+    }
+    res.send({ error: false, data: posts });
+  } catch (error) {
+    res.send({ error: true, message: error.message });
+  }
+};
+
+/** Get reviews
+ * TYPE : Get
+ * Route : /profile/reviews/get-all
+ */
+exports.getReviews = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    const reviews = await Review.find({
+      artist: _id,
+      status: STATUS_ACTIVE,
+    }).populate({
+      path: "user",
+      model: "user",
+      select: "first_name last_name",
+    });
+
+    res.send({ error: false, data: reviews });
   } catch (error) {
     res.send({ error: true, message: error.message });
   }

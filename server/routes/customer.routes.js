@@ -74,5 +74,6 @@ router.get(
 
 //artist routes
 router.get("/artist/get-by-id/:_id", authCustomer, ArtistRouter.getArtistById);
+router.post("/artist-profile/add-review", authCustomer, ArtistRouter.addReview);
 
 module.exports = router;

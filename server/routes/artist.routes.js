@@ -101,6 +101,16 @@ router.get(
   ProfileRouter.getPackageByType
 );
 
+//portfolio
+router.get(
+  "/profile/portfolio/get-all",
+  authArtist,
+  ProfileRouter.getAllPortfolio
+);
+
+//reviews
+router.get("/profile/review", authArtist, ProfileRouter.getReviews);
+
 //dashboard routes
 router.get(
   "/dashboard/get-my-profile",
