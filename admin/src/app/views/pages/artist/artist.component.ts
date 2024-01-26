@@ -3,11 +3,11 @@ import { ApiService } from 'src/app/shared/service/api.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-customer',
-  templateUrl: './customer.component.html',
-  styleUrls: ['./customer.component.scss'],
+  selector: 'app-artist',
+  templateUrl: './artist.component.html',
+  styleUrls: ['./artist.component.scss'],
 })
-export class CustomerComponent {
+export class ArtistComponent {
   listData: any = [];
   allData: any = [];
   userDetails: any = null;
@@ -19,7 +19,7 @@ export class CustomerComponent {
   }
 
   getListData() {
-    this.apiService.GET('admin/users/customer').subscribe((response: any) => {
+    this.apiService.GET('admin/users/artist').subscribe((response: any) => {
       if (response.error) {
         this.apiService.errorAlert(response.message);
         this.listData = [];

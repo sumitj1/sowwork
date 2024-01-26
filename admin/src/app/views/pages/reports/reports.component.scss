@@ -1,12 +1,14 @@
 // tabs
+@media (max-width: 991px) {
+  section {
+    margin-left: 0 !important;
+  }
+}
 .reportsContainer {
   margin-left: 250px;
-  padding: 60px;
   background: #f3f3f3;
   min-height: 100vh;
   .reportHeadder {
-    border-bottom: 1px solid #e1e1e1;
-    padding-bottom: 10px;
     .reportHeadding {
       color: #000;
       font-feature-settings: "clig" off, "liga" off;
@@ -28,7 +30,6 @@
           border-radius: 5px;
           background: #fff;
           padding: 10px;
-          min-width: 250px;
           text-align: left;
         }
         .active {

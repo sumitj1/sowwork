@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class ApiService {
   API_URL: any = environment.API_URL;
-  MEDIA_URL: any = `${this.API_URL}/public/uploads`;
+  MEDIA_URL: any = `${this.API_URL}/uploads`;
   errorStatus: boolean = false;
 
   constructor(

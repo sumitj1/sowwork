@@ -1,11 +1,8 @@
 .postsContainer {
   margin-top: 20px;
-  display: flex;
   font-family: Poppins;
   height: 100%;
   .mainWrapper {
-    flex: 0 0 65%;
-    // width: 680px;
     .searchSection {
       border-radius: 5px;
       background: #fff;
@@ -130,21 +127,15 @@
       }
     }
   }
-  .chartWrapper {
-    margin-left: 20px;
-    width: 315px;
-  }
 }
 
 .cardContainer {
   display: flex;
   border-radius: 5px;
-  max-width: 315px;
   height: 159px;
   flex-shrink: 0;
   flex-direction: column;
   padding: 12px 20px;
-  margin: 10px;
   font-family: Poppins;
   .cardHead {
     font-size: 14px;
@@ -215,10 +206,6 @@
       color: #e93e3e;
     }
   }
-}
-
-.jobscomplete {
-  background-color: #ffff;
 }
 
 .jobsoverdue {

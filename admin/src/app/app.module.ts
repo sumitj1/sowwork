@@ -18,6 +18,9 @@ import { CommentsComponent } from './views/pages/reports/comments/comments.compo
 import { NgChartsModule } from 'ng2-charts';
 import { CustomerComponent } from './views/pages/customer/customer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SpinnerComponent } from './views/components/spinner/spinner.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ArtistComponent } from './views/pages/artist/artist.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PostsComponent,
     CommentsComponent,
     CustomerComponent,
+    SpinnerComponent,
+    ArtistComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +52,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     }),
     NgChartsModule,
     NgbModule,
+    MatTooltipModule,
   ],
   providers: [
     {

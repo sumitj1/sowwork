@@ -14772,3 +14772,25 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   bottom: 0;
   height: 3px;
 }
+
+a.selected {
+  border-radius: 0.3125rem;
+  background: #000;
+  color: #ffffff !important;
+}
+
+.category-heading {
+  color: #000 !important;
+  font-family: Poppins !important;
+  font-size: 1rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+}
+
+.inside-heading {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

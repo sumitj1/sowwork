@@ -6,6 +6,7 @@ import { ReportsComponent } from './views/pages/reports/reports.component';
 import { CommentsComponent } from './views/pages/reports/comments/comments.component';
 import { PostsComponent } from './views/pages/reports/posts/posts.component';
 import { CustomerComponent } from './views/pages/customer/customer.component';
+import { ArtistComponent } from './views/pages/artist/artist.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,13 @@ const routes: Routes = [
     component: CustomerComponent,
     data: {
       title: 'Customer',
+    },
+  },
+  {
+    path: 'artist',
+    component: ArtistComponent,
+    data: {
+      title: 'Artist',
     },
   },
 ];

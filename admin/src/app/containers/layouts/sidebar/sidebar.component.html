@@ -61,7 +61,7 @@
   </div>
 </div> -->
 <nav
-  class="navbar navbar-vertical navbar-expand-md navbar-dark bg-red pb-md-0"
+  class="navbar navbar-vertical navbar-expand-lg navbar-dark bg-red pb-md-0 font-poppins"
   id="sidenav-main"
 >
   <div class="container-fluid">
@@ -104,34 +104,60 @@
           </div>
         </div>
       </div>
-      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+      <h6
+        class="navbar-heading category-heading text-dark mb-0 px-3 mx--3 bg-secondary pe-none"
+      >
         IMPORTANT
       </h6>
       <ul class="navbar-nav mb-md-1">
         <li class="nav-item">
-          <a class="nav-link ml-3 py-2 text-dark">Overview</a>
+          <a
+            class="nav-link ml-3 py-2 text-dark inside-heading"
+            routerLink="/overview"
+            routerLinkActive="selected"
+            >Overview</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link ml-3 py-2 text-dark">Reports</a>
+          <a
+            class="nav-link mx-3 py-2 text-dark inside-heading"
+            routerLink="/report"
+            routerLinkActive="selected"
+            >Reports</a
+          >
         </li>
       </ul>
-      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+      <h6
+        class="navbar-heading category-heading text-dark mb-0 px-3 mx--3 bg-secondary"
+      >
         USERS
       </h6>
       <ul class="navbar-nav mb-md-1">
         <li class="nav-item">
-          <a class="nav-link ml-3 py-2 text-dark">Customers</a>
+          <a
+            class="nav-link mx-3 py-2 text-dark inside-heading cursor-pointer"
+            routerLink="/customer"
+            routerLinkActive="selected"
+            >Customers</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link ml-3 py-2 text-dark">Artists</a>
+          <a
+            class="nav-link ml-3 py-2 text-dark inside-heading"
+            routerLink="/artist"
+            routerLinkActive="selected"
+            >Artists</a
+          >
         </li>
       </ul>
-      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+      <h6
+        class="navbar-heading category-heading text-dark mb-0 px-3 mx--3 bg-secondary"
+      >
         WORK
       </h6>
       <ul class="navbar-nav mb-md-1">
         <li class="nav-item">
-          <a class="nav-link ml-3 py-2 text-dark">Jobs</a>
+          <a class="nav-link ml-3 py-2 text-dark inside-heading">Jobs</a>
         </li>
         <li class="nav-item">
           <a class="nav-link ml-3 py-2 text-dark">Roles</a>
@@ -143,7 +169,9 @@
           <a class="nav-link ml-3 py-2 text-dark">Transcations</a>
         </li>
       </ul>
-      <h6 class="navbar-heading text-dark mb-0 px-3 mx--3 bg-secondary">
+      <h6
+        class="navbar-heading category-heading text-dark mb-0 px-3 mx--3 bg-secondary"
+      >
         SOCIAL MEDIA
       </h6>
       <ul class="navbar-nav mb-md-1">
@@ -160,9 +188,12 @@
           <a class="nav-link ml-3 py-2 text-dark">Ads</a>
         </li>
       </ul>
-      <ul class="navbar-nav mb-md-3 mb-4">
-        <li class="nav-item">
-          <button class="btn btn-dark ml-3">LOGOUT</button>
+      <h6
+        class="navbar-heading category-heading text-dark mb-0 px-3 mx--3 bg-secondary"
+      ></h6>
+      <ul class="navbar-nav mb-md-1">
+        <li class="nav-item cursor-pointer" (click)="logout()">
+          <a class="nav-link mx-3 py-2 text-dark">Logout</a>
         </li>
       </ul>
     </div>

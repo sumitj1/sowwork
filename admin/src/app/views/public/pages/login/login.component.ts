@@ -43,6 +43,10 @@ export class LoginComponent {
 
   //on form submit
   onSubmit() {
+    console.log(
+      '🚀 ~ LoginComponent ~ onSubmit ~ this.loginForm.valid:',
+      this.loginForm.valid
+    );
     if (this.loginForm.valid) {
       this.api
         .POST('admin/login', this.loginForm.value)

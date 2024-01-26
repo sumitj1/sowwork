@@ -62,7 +62,7 @@
   </div> -->
   <div class="container pb-5" style="margin-top: 15vh">
     <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-7">
+      <div class="col-lg-4 col-md-6 col-9">
         <div class="card bg-white shadow border-0">
           <div class="card-body px-lg-5 py-lg-5">
             <div class="text-center text-muted mb-4">
@@ -71,10 +71,10 @@
                 alt=""
                 class="mt-5"
               />
-              <h2 class="text-dark mt-4"><b>ADMIN PANEL</b></h2>
+              <h2 class="text-dark mt-4 font-poppins"><b>ADMIN PANEL</b></h2>
             </div>
             <form
-              class="formContainer"
+              class="formContainer font-poppins"
               [formGroup]="loginForm"
               (ngSubmit)="onSubmit()"
             >
@@ -144,7 +144,6 @@
                 <button
                   class="btn btn-dark my-4 col-6 col-md-4 py-2"
                   type="submit"
-                  [disabled]="!loginForm.valid"
                 >
                   Login
                 </button>

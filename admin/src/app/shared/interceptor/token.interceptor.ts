@@ -6,20 +6,30 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, finalize } from 'rxjs';
 import { ApiService } from '../service/api.service';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
+import { LoaderService } from '../service/loader.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private api: ApiService, private router: Router) {}
+  private totalRequests = 0;
+
+  constructor(
+    private api: ApiService,
+    private router: Router,
+    private loadingService: LoaderService
+  ) {}
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    this.totalRequests++;
+    this.loadingService.setLoading(true);
 
     if (this.api.getUserToken()) {
       req = req.clone({
@@ -38,6 +48,12 @@ export class TokenInterceptor implements HttpInterceptor {
           this.api.deleteSession();
         }
         return throwError(error);
+      }),
+      finalize(() => {
+        this.totalRequests--;
+        if (this.totalRequests == 0) {
+          this.loadingService.setLoading(false);
+        }
       })
     );
   }

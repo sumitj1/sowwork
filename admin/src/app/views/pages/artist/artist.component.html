@@ -1,6 +1,6 @@
 <app-sidebar></app-sidebar>
 <section class="p-4 p-md-5">
-  <h1 class="heading">Customer Profiles</h1>
+  <h1 class="heading">Artist Profiles</h1>
   <div class="row">
     <div class="col-12 col-md-5">
       <input
@@ -64,12 +64,10 @@
             <div class="col-6">
               <div
                 class="btn color-secondary w-100 py-2"
-                [ngClass]="
-                  userSubDetails == 'address' ? 'selected-heading' : ''
-                "
-                (click)="setUserSubData('address')"
+                [ngClass]="userSubDetails == 'about' ? 'selected-heading' : ''"
+                (click)="setUserSubData('about')"
               >
-                ADDRESS
+                ABOUT
               </div>
             </div>
             <div class="col-6">
@@ -96,61 +94,83 @@
           <div class="line my-3"></div>
           <!-- info -->
           <div *ngIf="userSubDetails == 'info'">
+            <!-- analytics -->
             <div class="row g-2 justify-content-center mb-3">
-              <div class="col-6">
+              <div class="col-6 col-lg-4">
                 <div
                   class="btn btn-warning w-100 d-flex justify-content-between align-items-center py-2"
                 >
                   <p
-                    class="text-warning text-dark d-flex flex-column mb-0 btn-custom-weight align-items-start"
+                    class="text-warning text-dark d-flex flex-column mb-0 btn-custom-weight text-start"
                   >
-                    <span>RATED</span>
-                    <span>BY ARTISTS</span>
+                    CUSTOMER<br />RATING
                   </p>
                   <p class="info-count text-dark mb-0 h5">4.4</p>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-6 col-lg-4">
                 <div
-                  class="btn color-secondary w-100 d-flex justify-content-between align-items-center py-2"
+                  class="btn btn-warning w-100 d-flex justify-content-between align-items-center py-2"
                 >
                   <p
-                    class="text-dark d-flex flex-column mb-0 btn-custom-weight align-items-start"
+                    class="text-dark d-flex flex-column mb-0 btn-custom-weight align-items-start text-start"
                   >
-                    <span> JOBS </span>
-                    <span>COMPLETED</span>
+                    PERFORMACE<br />RATING
                   </p>
-                  <p class="info-count text-dark mb-0 h5">40</p>
+                  <p class="info-count text-dark mb-0 h5">1.3</p>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-6 col-lg-4">
                 <div
                   class="btn color-secondary w-100 d-flex justify-content-between align-items-center py-2"
                 >
                   <p
-                    class="text-dark d-flex flex-column mb-0 btn-custom-weight align-items-start"
+                    class="text-dark d-flex flex-column mb-0 btn-custom-weight text-start"
                   >
-                    <span> JOBS </span>
-                    <span>ACTIVE</span>
+                    JOBS<br />COMPLETED
                   </p>
                   <p class="info-count text-dark mb-0 h5">43</p>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-6 col-lg-4">
+                <div
+                  class="btn color-secondary w-100 d-flex justify-content-between align-items-center py-2"
+                >
+                  <p
+                    class="info-text d-flex flex-column mb-0 btn-custom-weight text-start"
+                  >
+                    TOTAL<br />POSTS
+                  </p>
+                  <p class="info-count mb-0 h5">499</p>
+                </div>
+              </div>
+              <div class="col-6 col-lg-4">
+                <div
+                  class="btn color-secondary w-100 d-flex justify-content-between align-items-center py-2"
+                >
+                  <p
+                    class="info-text d-flex flex-column mb-0 btn-custom-weight text-start"
+                  >
+                    JOBS<br />ACTIVE
+                  </p>
+                  <p class="info-count mb-0 h5">12</p>
+                </div>
+              </div>
+              <div class="col-6 col-lg-4">
                 <div
                   class="btn theme-bg-color w-100 d-flex justify-content-between align-items-center py-2 text-white"
                 >
                   <p
-                    class="info-text d-flex flex-column mb-0 btn-custom-weight align-items-start"
+                    class="info-text d-flex flex-column mb-0 btn-custom-weight text-start"
                   >
-                    <span>JOBS</span>
-                    <span>PAYOUT</span>
+                    JOB<br />EARNINGS
                   </p>
                   <p class="info-count mb-0 h5">40K</p>
                 </div>
               </div>
             </div>
             <div class="row my-2">
+              <!-- profile picture -->
               <div class="col-5">
                 <div class="profile-card">
                   <p class="mb-1 text-grey-custom font-weight-600 text-center">
@@ -176,6 +196,30 @@
                     <p class="mb-0 detail-heading text-uppercase">Last Name</p>
                     <p class="mb-0 detail-data">
                       {{ userDetails?.last_name || "-" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- cover picture -->
+              <div class="col-5">
+                <div class="profile-card">
+                  <p class="mb-1 text-grey-custom font-weight-600 text-center">
+                    COVER PICTURE
+                  </p>
+                  <img
+                    class="w-full w-100"
+                    src="{{ apiService.MEDIA_URL }}/{{
+                      userDetails.cover_image
+                    }}"
+                  />
+                </div>
+              </div>
+              <div class="col-7 mt-4">
+                <div class="info-table">
+                  <div class="mb-2">
+                    <p class="mb-0 detail-heading text-uppercase">Role</p>
+                    <p class="mb-0 detail-data">
+                      {{ userDetails?.phone_number || "-" }}
                     </p>
                   </div>
                   <div class="mb-2">
@@ -243,33 +287,29 @@
               </div>
             </div>
           </div>
-          <!-- Address -->
-          <div *ngIf="userSubDetails == 'address'">
-            <div
-              class="row my-3 mx-1"
-              *ngFor="let address of userDetails?.address"
-            >
-              <div class="col-12 address-list">
-                <div class="mx-3 my-3">
-                  <p class="text-dark font-size-1 font-weight-500">
-                    {{ address?.name }}
-                  </p>
-                  <p class="mb-4">
-                    {{ address?.building_number }} {{ address?.address }}
-                  </p>
-                  <div class="action-btn d-flex justify-content-end">
-                    <div class="cursor-pointer action-icons" matTooltip="Edit">
-                      <i class="fa-regular fa-pen-to-square fa-lg"></i>
-                    </div>
-                    <div
-                      class="cursor-pointer action-icons"
-                      matTooltip="Delete"
-                      (click)="changeStatus('delete')"
-                    >
-                      <i class="fa-regular fa-trash-can fa-lg"></i>
-                    </div>
-                  </div>
-                </div>
+          <!-- About -->
+          <div *ngIf="userSubDetails == 'about'">
+            <div class="my-3 mx-1">
+              <p
+                class="text-grey-custom font-weight-600 text-start font-size-0"
+              >
+                ABOUT ME
+              </p>
+              {{ userDetails?.about }}
+            </div>
+            <div class="my-3 mx-1">
+              <p
+                class="text-grey-custom font-weight-600 text-start font-size-0"
+              >
+                DETAILS
+              </p>
+              <div class="row">
+                <div class="col-6 font-weight-600 my-1">Age</div>
+                <div class="col-6">22</div>
+                <div class="col-6 font-weight-600 my-1">Gender</div>
+                <div class="col-6">Male</div>
+                <div class="col-6 font-weight-600 my-1">Experience</div>
+                <div class="col-6">5 Years</div>
               </div>
             </div>
           </div>

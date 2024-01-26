@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const IndexRouter = require("../controllers/admin/index.contoller");
 const ReportRouter = require("../controllers/admin/report.controller");
+const UserRouter = require("../controllers/admin/user.controller");
 const { authAdmin } = require("../middleware/auth.middleware");
 const Specialization = require("../models/specialization");
+
 //general routes
 router.post("/signup", IndexRouter.signup);
 router.post("/login", IndexRouter.login);
@@ -20,6 +22,9 @@ router.get(
   authAdmin,
   ReportRouter.changePostStatus
 );
+
+//users routes
+router.get("/users/:role", authAdmin, UserRouter.getUsersByRole);
 
 router.post("/specializations", async (req, res) => {
   console.log(req.body);
